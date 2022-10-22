@@ -1,0 +1,54 @@
+type User {
+  Id: ID!
+  Name: String!
+  Description: String!
+  CNPJ: String!
+  Email: String!
+  Password: String!
+  Image: String
+  Products: [Products]!
+  Orders: [Order!]!
+  Tables: [Tables!]!
+  Superadmin: Boolean!
+  Admin: Boolean!
+}
+
+type Client {
+  Id: ID!
+  Name: String!
+  Email: String!
+  Password: String!
+  CPF: String!
+  Phone: String!
+  FidelityScore: [Fidelity!]!
+}
+
+type Fidelity {
+  Id: ID!
+  Score: Int!
+}
+
+type Auth {
+  Email: String!
+  Password: String!
+}
+
+type Products {
+  Id: ID!
+  Name: String!
+  Description: String!
+  Price: Float!
+}
+
+type Tables {
+  Id: ID!
+  Qrcode: String!
+}
+
+type Orders {
+  Id: ID!
+  MarketplaceId: String!
+  TableId: String!
+  TotalPrice: Float!
+  Products: [Products!]!
+}
