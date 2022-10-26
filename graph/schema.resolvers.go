@@ -5,9 +5,10 @@ package graph
 
 import (
 	"context"
-	"github.com/Caicrs/Payfood-backend/graph/store"
+
 	"github.com/Caicrs/Payfood-backend/graph/generated"
 	"github.com/Caicrs/Payfood-backend/graph/model"
+	"github.com/Caicrs/Payfood-backend/graph/store"
 )
 
 // CreateTodo is the resolver for the createTodo field.
@@ -19,20 +20,20 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 	}
 
 	return &model.Todo{
-		ID: "1",
+		ID:   "1",
 		Text: input.Text,
-		Done:false,
+		Done: false,
 		User: &model.User{
-		ID: input.UserID,
-		Name: "caicdev",
+			ID:   input.UserID,
+			Name: "caicdev",
 		},
-		}, nil
+	}, nil
 }
 
 // Todos is the resolver for the todos field.
 func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
 	db := store.GetStoreFromContext(ctx)
-    return db.Todos,nil
+	return db.Todos, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.
@@ -43,4 +44,3 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
-
