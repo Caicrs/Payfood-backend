@@ -2,20 +2,63 @@
 
 package model
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type Client struct {
+	ID            string      `json:"Id"`
+	Name          *string     `json:"Name"`
+	Email         *string     `json:"Email"`
+	Password      *string     `json:"Password"`
+	Cpf           *string     `json:"CPF"`
+	Phone         *string     `json:"Phone"`
+	FidelityScore []*Fidelity `json:"FidelityScore"`
 }
 
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
+type Fidelity struct {
+	ID       string `json:"Id"`
+	ClientID string `json:"ClientId"`
+	Score    int    `json:"Score"`
+}
+
+type NewClient struct {
+	Name     string `json:"Name"`
+	Email    string `json:"Email"`
+	Password string `json:"Password"`
+	Cpf      string `json:"CPF"`
+	Phone    string `json:"Phone"`
+}
+
+type Order struct {
+	ID                string     `json:"Id"`
+	MarketplaceUserID *string    `json:"MarketplaceUserId"`
+	ClientID          *string    `json:"ClientId"`
+	TableID           *string    `json:"TableId"`
+	TotalPrice        *float64   `json:"TotalPrice"`
+	Products          []*Product `json:"Products"`
+}
+
+type Product struct {
+	ID            string   `json:"Id"`
+	MarketplaceID *string  `json:"MarketplaceId"`
+	Name          *string  `json:"Name"`
+	Description   *string  `json:"Description"`
+	Price         *float64 `json:"Price"`
+}
+
+type Table struct {
+	ID     string `json:"Id"`
+	Qrcode string `json:"Qrcode"`
 }
 
 type User struct {
-	ID    string  `json:"id"`
-	Email *string `json:"email"`
-	Name  string  `json:"name"`
+	ID          string     `json:"id"`
+	Name        *string    `json:"Name"`
+	Description *string    `json:"Description"`
+	Cnpj        *string    `json:"CNPJ"`
+	Email       *string    `json:"Email"`
+	Password    *string    `json:"Password"`
+	Image       *string    `json:"Image"`
+	Products    []*Product `json:"Products"`
+	Orders      []*Order   `json:"Orders"`
+	Tables      []*Table   `json:"Tables"`
+	Superadmin  *bool      `json:"Superadmin"`
+	Admin       *bool      `json:"Admin"`
 }

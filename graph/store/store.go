@@ -1,51 +1,51 @@
 package store
+
 import (
-	"github.com/Caicrs/Payfood-backend/graph/model"
-	"net/http"
 	"context"
+	"net/http"
+
+	"github.com/Caicrs/Payfood-backend/graph/model"
 )
 
-
 type Store struct {
-	Todos []*model.Todo
+	Clients []*model.Client
 }
 
-func NewStore() *Store{
-	todos := make([]*model.Todo,0)
+func NewClient() *Store {
+	clients := make([]*model.Client, 0)
 	return &Store{
-	Todos:todos,
+		Clients: clients,
 	}
 }
 
-func(s *Store) AddTodo(t *model.NewTodo) error{
-	s.Todos = append(s.Todos, &model.Todo{
-		ID: "1",
-		Text: t.Text,
-		Done:false,
-		User: &model.User{
-		ID: t.UserID,
-		Name: "caicdev",
-		},
+func (s *Store) AddClient(t *model.NewClient) error {
+	s.Clients = append(s.Clients, &model.Client{
+		ID:       "1",
+		Name:     &t.Name,
+		Email:    &t.Email,
+		Password: &t.Password,
+		Cpf:      &t.Cpf,
+		Phone:    &t.Phone,
 	})
-return nil
-} 
+	return nil
+
+}
 
 type StoreKeyType string
 
 var StoreKey StoreKeyType = "STORE"
 
-
-func WithStore(store *Store,next http.Handler) http.Handler{
-return http.HandlerFunc(func (w http.ResponseWriter, r *http.Request){
-	reqWithStore := r.WithContext(context.WithValue(r.Context(), StoreKey, store))
-	next.ServeHTTP(w, reqWithStore)
-})
+func WithStore(store *Store, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		reqWithStore := r.WithContext(context.WithValue(r.Context(), StoreKey, store))
+		next.ServeHTTP(w, reqWithStore)
+	})
 }
 
-func GetStoreFromContext(ctx context.Context) *Store{
+func GetStoreFromContext(ctx context.Context) *Store {
 	store, ok := ctx.Value(StoreKey).(*Store)
-	if !ok{
-	panic("couldn't find the store")
+	if !ok {
+		panic("couldn't find the store")
 	}
 	return store
-	}
+}

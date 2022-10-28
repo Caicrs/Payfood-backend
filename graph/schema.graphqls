@@ -2,28 +2,94 @@
 #
 # https://gqlgen.com/getting-started/
 
-type Todo {
-  id: ID!
-  text: String!
-  done: Boolean!
-  user: User!
+# Client | create + queryAll + query(find: CapsulesFind, limit: Int, offset: Int, order: String, sort: String) + QueryUpdate(id) + queryDelete(id)
+#
+#
+#
+#
+
+# TABLES STRUCTS ----------------------------
+# Orders struct
+type Order {
+  Id: ID!
+  MarketplaceUserId: String
+  ClientId: String
+  TableId: String
+  TotalPrice: Float
+  Products: [Product]
 }
 
+# User struct
 type User {
   id: ID!
-  email: String
-  name: String!
+  Name: String
+  Description: String
+  CNPJ: String
+  Email: String
+  Password: String
+  Image: String
+  Products: [Product]
+  Orders: [Order!]
+  Tables: [Table!]
+  Superadmin: Boolean
+  Admin: Boolean
 }
 
-type Query {
-  todos: [Todo!]!
+# Tables struct
+type Table {
+  Id: ID!
+  Qrcode: String!
 }
 
-input NewTodo {
-  text: String!
-  userId: String!
+# Product struct
+type Product {
+  Id: ID!
+  MarketplaceId: String
+  Name: String
+  Description: String
+  Price: Float
+}
+
+# Fidelity struct
+type Fidelity {
+  Id: ID!
+  ClientId: ID!
+  Score: Int!
+}
+
+# Client struct
+type Client {
+  Id: ID!
+  Name: String
+  Email: String
+  Password: String
+  CPF: String
+  Phone: String
+  FidelityScore: [Fidelity]
+}
+
+# INPUTS STRUCTS ----------------------------
+
+# New Client
+input NewClient {
+  Name: String!
+  Email: String!
+  Password: String!
+  CPF: String!
+  Phone: String!
 }
 
 type Mutation {
-  createTodo(input: NewTodo!): Todo!
+  createClient(input: NewClient!): Client
+}
+
+# QUERY -------------------------------------
+type Query {
+  users: [User]
+  tables: [Table]
+  products: [Product]
+
+  clients: [Client]
+  orders:[Order]
+  fidelity: [Fidelity]
 }
