@@ -13,9 +13,9 @@ type Client struct {
 }
 
 type Fidelity struct {
-	ID       string `json:"Id"`
-	ClientID string `json:"ClientId"`
-	Score    int    `json:"Score"`
+	ID       string  `json:"Id"`
+	ClientID *string `json:"ClientId"`
+	Score    *int    `json:"Score"`
 }
 
 type NewClient struct {
@@ -24,6 +24,41 @@ type NewClient struct {
 	Password string `json:"Password"`
 	Cpf      string `json:"CPF"`
 	Phone    string `json:"Phone"`
+}
+
+type NewFidelity struct {
+	ClientID string `json:"ClientId"`
+	Score    int    `json:"Score"`
+}
+
+type NewOrder struct {
+	MarketplaceUserID string  `json:"MarketplaceUserId"`
+	ClientID          string  `json:"ClientId"`
+	TableID           string  `json:"TableId"`
+	TotalPrice        float64 `json:"TotalPrice"`
+}
+
+type NewProduct struct {
+	MarketplaceID string  `json:"MarketplaceId"`
+	Name          string  `json:"Name"`
+	Description   string  `json:"Description"`
+	Price         float64 `json:"Price"`
+}
+
+type NewTable struct {
+	Number int    `json:"Number"`
+	Qrcode string `json:"Qrcode"`
+}
+
+type NewUser struct {
+	Name        string `json:"Name"`
+	Description string `json:"Description"`
+	Cnpj        string `json:"CNPJ"`
+	Email       string `json:"Email"`
+	Password    string `json:"Password"`
+	Image       string `json:"Image"`
+	Superadmin  bool   `json:"Superadmin"`
+	Admin       bool   `json:"Admin"`
 }
 
 type Order struct {
@@ -44,8 +79,9 @@ type Product struct {
 }
 
 type Table struct {
-	ID     string `json:"Id"`
-	Qrcode string `json:"Qrcode"`
+	ID     string  `json:"Id"`
+	Number *int    `json:"Number"`
+	Qrcode *string `json:"Qrcode"`
 }
 
 type User struct {

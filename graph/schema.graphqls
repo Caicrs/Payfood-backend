@@ -38,7 +38,8 @@ type User {
 # Tables struct
 type Table {
   Id: ID!
-  Qrcode: String!
+  Number: Int
+  Qrcode: String
 }
 
 # Product struct
@@ -53,8 +54,8 @@ type Product {
 # Fidelity struct
 type Fidelity {
   Id: ID!
-  ClientId: ID!
-  Score: Int!
+  ClientId: String
+  Score: Int
 }
 
 # Client struct
@@ -79,7 +80,54 @@ input NewClient {
   Phone: String!
 }
 
+# New User
+input NewUser {
+  Name: String!
+  Description: String!
+  CNPJ: String!
+  Email: String!
+  Password: String!
+  Image: String!
+  Superadmin: Boolean!
+  Admin: Boolean!
+}
+
+# NewOrder
+input NewOrder{
+  MarketplaceUserId: String!
+  ClientId: String!
+  TableId: String!
+  TotalPrice: Float!
+}
+
+# NewTables 
+input NewTable {
+  Number: Int!
+  Qrcode: String!
+}
+
+# NewProduct
+input NewProduct {
+  MarketplaceId: String!
+  Name: String!
+  Description: String!
+  Price: Float!
+}
+
+# NewFidelity
+input NewFidelity {
+  ClientId: String!
+  Score: Int!
+}
+
 type Mutation {
+  # Admin side 
+  createUser(input: NewUser!): User
+  createProduct(input: NewProduct!): Product
+  createTable(input: NewTable!): Table
+  # Customer side
+  createOrder(input: NewOrder!): Order
+  createFidelity(input: NewFidelity!): Fidelity
   createClient(input: NewClient!): Client
 }
 
