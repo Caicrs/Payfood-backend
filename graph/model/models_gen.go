@@ -3,13 +3,12 @@
 package model
 
 type Client struct {
-	ID            string      `json:"Id"`
-	Name          *string     `json:"Name"`
-	Email         *string     `json:"Email"`
-	Password      *string     `json:"Password"`
-	Cpf           *string     `json:"CPF"`
-	Phone         *string     `json:"Phone"`
-	FidelityScore []*Fidelity `json:"FidelityScore"`
+	ID       string  `json:"Id"`
+	Name     *string `json:"Name"`
+	Email    *string `json:"Email"`
+	Password *string `json:"Password"`
+	Cpf      *string `json:"CPF"`
+	Phone    *string `json:"Phone"`
 }
 
 type Fidelity struct {
@@ -62,12 +61,11 @@ type NewUser struct {
 }
 
 type Order struct {
-	ID                string     `json:"Id"`
-	MarketplaceUserID *string    `json:"MarketplaceUserId"`
-	ClientID          *string    `json:"ClientId"`
-	TableID           *string    `json:"TableId"`
-	TotalPrice        *float64   `json:"TotalPrice"`
-	Products          []*Product `json:"Products"`
+	ID                string   `json:"Id"`
+	MarketplaceUserID *string  `json:"MarketplaceUserId"`
+	ClientID          *string  `json:"ClientId"`
+	TableID           *string  `json:"TableId"`
+	TotalPrice        *float64 `json:"TotalPrice"`
 }
 
 type Product struct {
@@ -85,16 +83,13 @@ type Table struct {
 }
 
 type User struct {
-	ID          string     `json:"id"`
-	Name        *string    `json:"Name"`
-	Description *string    `json:"Description"`
-	Cnpj        *string    `json:"CNPJ"`
-	Email       *string    `json:"Email"`
-	Password    *string    `json:"Password"`
-	Image       *string    `json:"Image"`
-	Products    []*Product `json:"Products"`
-	Orders      []*Order   `json:"Orders"`
-	Tables      []*Table   `json:"Tables"`
-	Superadmin  *bool      `json:"Superadmin"`
-	Admin       *bool      `json:"Admin"`
+	ID          string  `json:"id"`
+	Name        *string `json:"Name"`
+	Description *string `json:"Description"`
+	Cnpj        *string `json:"CNPJ"`
+	Email       *string `json:"Email"`
+	Password    *string `json:"Password"`
+	Image       *string `json:"Image"`
+	Superadmin  *bool   `json:"Superadmin"`
+	Admin       *bool   `json:"Admin"`
 }

@@ -16,7 +16,6 @@ type Order {
   ClientId: String
   TableId: String
   TotalPrice: Float
-  Products: [Product]
 }
 
 # User struct
@@ -28,9 +27,6 @@ type User {
   Email: String
   Password: String
   Image: String
-  Products: [Product]
-  Orders: [Order!]
-  Tables: [Table!]
   Superadmin: Boolean
   Admin: Boolean
 }
@@ -66,7 +62,6 @@ type Client {
   Password: String
   CPF: String
   Phone: String
-  FidelityScore: [Fidelity]
 }
 
 # INPUTS STRUCTS ----------------------------
@@ -122,13 +117,13 @@ input NewFidelity {
 
 type Mutation {
   # Admin side 
-  createUser(input: NewUser!): User
-  createProduct(input: NewProduct!): Product
-  createTable(input: NewTable!): Table
+  createUser(input: NewUser!): User!
+  createProduct(input: NewProduct!): Product!
+  createTable(input: NewTable!): Table!
   # Customer side
-  createOrder(input: NewOrder!): Order
-  createFidelity(input: NewFidelity!): Fidelity
-  createClient(input: NewClient!): Client
+  createOrder(input: NewOrder!): Order!
+  createFidelity(input: NewFidelity!): Fidelity!
+  createClient(input: NewClient!): Client!
 }
 
 # QUERY -------------------------------------
