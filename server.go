@@ -17,7 +17,6 @@ import (
 const defaultPort = "4000"
 
 func main() {
-
 	godotenv.Load()
 	myDb := os.Getenv("POSTGRES_URL")
 	fmt.Println(myDb)

@@ -2,15 +2,20 @@ package graph
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Caicrs/Payfood-backend/common"
 	"github.com/Caicrs/Payfood-backend/graph/generated"
 	"github.com/Caicrs/Payfood-backend/graph/model"
+	uuid "github.com/satori/go.uuid"
 )
 
 func (r *mutationResolver) CreateOrder(ctx context.Context, input model.NewOrder) (*model.Order, error) {
+
+	// context
 	context := common.GetContext(ctx)
 	Order := &model.Order{
+		ID:                fmt.Sprintf("%v", uuid.NewV4()),
 		MarketplaceUserID: &input.MarketplaceUserID,
 		ClientID:          &input.ClientID,
 		TableID:           &input.TableID,
@@ -26,6 +31,7 @@ func (r *mutationResolver) CreateOrder(ctx context.Context, input model.NewOrder
 func (r *mutationResolver) CreateClient(ctx context.Context, input model.NewClient) (*model.Client, error) {
 	context := common.GetContext(ctx)
 	Clients := &model.Client{
+		ID:       fmt.Sprintf("%v", uuid.NewV4()),
 		Name:     &input.Name,
 		Email:    &input.Email,
 		Password: &input.Password,
@@ -42,6 +48,7 @@ func (r *mutationResolver) CreateClient(ctx context.Context, input model.NewClie
 func (r *mutationResolver) CreateFidelity(ctx context.Context, input model.NewFidelity) (*model.Fidelity, error) {
 	context := common.GetContext(ctx)
 	Fidelity := &model.Fidelity{
+		ID:       fmt.Sprintf("%v", uuid.NewV4()),
 		ClientID: &input.ClientID,
 		Score:    &input.Score,
 	}
@@ -55,6 +62,7 @@ func (r *mutationResolver) CreateFidelity(ctx context.Context, input model.NewFi
 func (r *mutationResolver) CreateProduct(ctx context.Context, input model.NewProduct) (*model.Product, error) {
 	context := common.GetContext(ctx)
 	Products := &model.Product{
+		ID:            fmt.Sprintf("%v", uuid.NewV4()),
 		MarketplaceID: &input.MarketplaceID,
 		Name:          &input.Name,
 		Description:   &input.Description,
@@ -70,6 +78,7 @@ func (r *mutationResolver) CreateProduct(ctx context.Context, input model.NewPro
 func (r *mutationResolver) CreateTable(ctx context.Context, input model.NewTable) (*model.Table, error) {
 	context := common.GetContext(ctx)
 	Tables := &model.Table{
+		ID:     fmt.Sprintf("%v", uuid.NewV4()),
 		Number: &input.Number,
 		Qrcode: &input.Qrcode,
 	}
@@ -83,6 +92,7 @@ func (r *mutationResolver) CreateTable(ctx context.Context, input model.NewTable
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
 	context := common.GetContext(ctx)
 	Users := &model.User{
+		ID:          fmt.Sprintf("%v", uuid.NewV4()),
 		Name:        &input.Name,
 		Description: &input.Description,
 		Cnpj:        &input.Cnpj,
