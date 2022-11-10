@@ -9,7 +9,7 @@ import (
 	"github.com/Caicrs/Payfood-backend/graph/model"
 )
 
-func (r *mutationResolver) CreateOrder(ctx context.Context, input *model.NewOrder, products []*model.NewProduct) (*model.Order, error) {
+func (r *mutationResolver) CreateOrder(ctx context.Context, input *model.NewOrder) (*model.Order, error) {
 
 	// context
 	context := common.GetContext(ctx)
@@ -18,17 +18,6 @@ func (r *mutationResolver) CreateOrder(ctx context.Context, input *model.NewOrde
 		ClientID:          input.ClientID,
 		TableID:           input.TableID,
 		TotalPrice:        input.TotalPrice,
-	}
-
-	order.Products = make([]*model.Product, len(products))
-
-	for index, item := range products {
-		order.Products[index] = &model.Product{
-			MarketplaceID: item.MarketplaceID,
-			Name:          item.Name,
-			Description:   item.Description,
-			Price:         item.Price,
-		}
 	}
 
 	err := context.Database.Create(&order).Error

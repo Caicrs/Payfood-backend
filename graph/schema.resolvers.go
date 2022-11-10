@@ -32,7 +32,7 @@ func (r *mutationResolver) CreateTable(ctx context.Context, input model.NewTable
 }
 
 // CreateOrder is the resolver for the createOrder field.
-func (r *mutationResolver) CreateOrder(ctx context.Context, input *model.NewOrder, products []*model.NewProduct) (*model.Order, error) {
+func (r *mutationResolver) CreateOrder(ctx context.Context, input *model.NewOrder) (*model.Order, error) {
 	panic(fmt.Errorf("not implemented: CreateOrder - createOrder"))
 }
 

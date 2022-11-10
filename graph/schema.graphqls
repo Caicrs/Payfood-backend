@@ -11,14 +11,12 @@
 # TABLES STRUCTS ----------------------------
 # Orders struct
 type Order {
-  gorm.Model
   id: Int!
   marketplace_user_id: String!
   client_id: String!
   table_id: String!
   total_price: Float!
-  ProductsID: [String]
-  products: [Product!]! `gorm:"foreignKey:CompanyRefer"`
+  products: [Product!]!
 }
 
 # NewOrder
@@ -80,6 +78,7 @@ type Product {
   Name: String!
   Description: String!
   Price: Float!
+  order: Order!
 }
 
 
@@ -133,7 +132,7 @@ type Mutation {
   createProduct(input: NewProduct!): Product!
   createTable(input: NewTable!): Table!
   # Customer side
-  createOrder(input: NewOrder,products: [NewProduct]): Order!
+  createOrder(input: NewOrder): Order!
   createFidelity(input: NewFidelity!): Fidelity!
   createClient(input: NewClient!): Client!
 }

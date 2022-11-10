@@ -61,7 +61,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		CreateClient   func(childComplexity int, input model.NewClient) int
 		CreateFidelity func(childComplexity int, input model.NewFidelity) int
-		CreateOrder    func(childComplexity int, input *model.NewOrder, products []*model.NewProduct) int
+		CreateOrder    func(childComplexity int, input *model.NewOrder) int
 		CreateProduct  func(childComplexity int, input model.NewProduct) int
 		CreateTable    func(childComplexity int, input model.NewTable) int
 		CreateUser     func(childComplexity int, input model.NewUser) int
@@ -73,7 +73,6 @@ type ComplexityRoot struct {
 		ID                func(childComplexity int) int
 		MarketplaceUserID func(childComplexity int) int
 		Products          func(childComplexity int) int
-		ProductsID        func(childComplexity int) int
 		TableID           func(childComplexity int) int
 		TotalPrice        func(childComplexity int) int
 	}
@@ -83,6 +82,7 @@ type ComplexityRoot struct {
 		ID            func(childComplexity int) int
 		MarketplaceID func(childComplexity int) int
 		Name          func(childComplexity int) int
+		Order         func(childComplexity int) int
 		Price         func(childComplexity int) int
 	}
 
@@ -127,7 +127,7 @@ type MutationResolver interface {
 	DeleteUser(ctx context.Context, id string) (bool, error)
 	CreateProduct(ctx context.Context, input model.NewProduct) (*model.Product, error)
 	CreateTable(ctx context.Context, input model.NewTable) (*model.Table, error)
-	CreateOrder(ctx context.Context, input *model.NewOrder, products []*model.NewProduct) (*model.Order, error)
+	CreateOrder(ctx context.Context, input *model.NewOrder) (*model.Order, error)
 	CreateFidelity(ctx context.Context, input model.NewFidelity) (*model.Fidelity, error)
 	CreateClient(ctx context.Context, input model.NewClient) (*model.Client, error)
 }
@@ -258,7 +258,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateOrder(childComplexity, args["input"].(*model.NewOrder), args["products"].([]*model.NewProduct)), true
+		return e.complexity.Mutation.CreateOrder(childComplexity, args["input"].(*model.NewOrder)), true
 
 	case "Mutation.createProduct":
 		if e.complexity.Mutation.CreateProduct == nil {
@@ -336,13 +336,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Order.Products(childComplexity), true
 
-	case "Order.productsID":
-		if e.complexity.Order.ProductsID == nil {
-			break
-		}
-
-		return e.complexity.Order.ProductsID(childComplexity), true
-
 	case "Order.table_id":
 		if e.complexity.Order.TableID == nil {
 			break
@@ -384,6 +377,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Product.Name(childComplexity), true
+
+	case "Product.order":
+		if e.complexity.Product.Order == nil {
+			break
+		}
+
+		return e.complexity.Product.Order(childComplexity), true
 
 	case "Product.Price":
 		if e.complexity.Product.Price == nil {
@@ -687,7 +687,7 @@ var sources = []*ast.Source{
 #
 #
 #
-directive @goField(forceResolver: Boolean, name: String) on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
 # TABLES STRUCTS ----------------------------
 # Orders struct
 type Order {
@@ -696,8 +696,7 @@ type Order {
   client_id: String!
   table_id: String!
   total_price: Float!
-  productsID: [String]
-  products: [Product!]! 
+  products: [Product!]!
 }
 
 # NewOrder
@@ -759,6 +758,7 @@ type Product {
   Name: String!
   Description: String!
   Price: Float!
+  order: Order!
 }
 
 
@@ -812,7 +812,7 @@ type Mutation {
   createProduct(input: NewProduct!): Product!
   createTable(input: NewTable!): Table!
   # Customer side
-  createOrder(input: NewOrder,products: [NewProduct]): Order! @goField(forceResolver: true)
+  createOrder(input: NewOrder): Order!
   createFidelity(input: NewFidelity!): Fidelity!
   createClient(input: NewClient!): Client!
 }
@@ -831,7 +831,7 @@ type Query {
   clients: [Client]
   findClient(id:ID!): [Client]
 
-  orders:[Order]@goField(forceResolver: true)
+  orders:[Order]
   findOrder(id:ID!): [Order]
 
   fidelity: [Fidelity]
@@ -886,15 +886,6 @@ func (ec *executionContext) field_Mutation_createOrder_args(ctx context.Context,
 		}
 	}
 	args["input"] = arg0
-	var arg1 []*model.NewProduct
-	if tmp, ok := rawArgs["products"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("products"))
-		arg1, err = ec.unmarshalONewProduct2ᚕᚖgithubᚗcomᚋCaicrsᚋPayfoodᚑbackendᚋgraphᚋmodelᚐNewProduct(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["products"] = arg1
 	return args, nil
 }
 
@@ -1659,6 +1650,8 @@ func (ec *executionContext) fieldContext_Mutation_createProduct(ctx context.Cont
 				return ec.fieldContext_Product_Description(ctx, field)
 			case "Price":
 				return ec.fieldContext_Product_Price(ctx, field)
+			case "order":
+				return ec.fieldContext_Product_order(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Product", field.Name)
 		},
@@ -1754,7 +1747,7 @@ func (ec *executionContext) _Mutation_createOrder(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateOrder(rctx, fc.Args["input"].(*model.NewOrder), fc.Args["products"].([]*model.NewProduct))
+		return ec.resolvers.Mutation().CreateOrder(rctx, fc.Args["input"].(*model.NewOrder))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1789,8 +1782,6 @@ func (ec *executionContext) fieldContext_Mutation_createOrder(ctx context.Contex
 				return ec.fieldContext_Order_table_id(ctx, field)
 			case "total_price":
 				return ec.fieldContext_Order_total_price(ctx, field)
-			case "productsID":
-				return ec.fieldContext_Order_productsID(ctx, field)
 			case "products":
 				return ec.fieldContext_Order_products(ctx, field)
 			}
@@ -2163,47 +2154,6 @@ func (ec *executionContext) fieldContext_Order_total_price(ctx context.Context, 
 	return fc, nil
 }
 
-func (ec *executionContext) _Order_productsID(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Order_productsID(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ProductsID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*string)
-	fc.Result = res
-	return ec.marshalOString2ᚕᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Order_productsID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Order",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Order_products(ctx context.Context, field graphql.CollectedField, obj *model.Order) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Order_products(ctx, field)
 	if err != nil {
@@ -2253,6 +2203,8 @@ func (ec *executionContext) fieldContext_Order_products(ctx context.Context, fie
 				return ec.fieldContext_Product_Description(ctx, field)
 			case "Price":
 				return ec.fieldContext_Product_Price(ctx, field)
+			case "order":
+				return ec.fieldContext_Product_order(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Product", field.Name)
 		},
@@ -2475,6 +2427,64 @@ func (ec *executionContext) fieldContext_Product_Price(ctx context.Context, fiel
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Float does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Product_order(ctx context.Context, field graphql.CollectedField, obj *model.Product) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Product_order(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Order, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Order)
+	fc.Result = res
+	return ec.marshalNOrder2ᚖgithubᚗcomᚋCaicrsᚋPayfoodᚑbackendᚋgraphᚋmodelᚐOrder(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Product_order(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Product",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Order_id(ctx, field)
+			case "marketplace_user_id":
+				return ec.fieldContext_Order_marketplace_user_id(ctx, field)
+			case "client_id":
+				return ec.fieldContext_Order_client_id(ctx, field)
+			case "table_id":
+				return ec.fieldContext_Order_table_id(ctx, field)
+			case "total_price":
+				return ec.fieldContext_Order_total_price(ctx, field)
+			case "products":
+				return ec.fieldContext_Order_products(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Order", field.Name)
 		},
 	}
 	return fc, nil
@@ -2776,6 +2786,8 @@ func (ec *executionContext) fieldContext_Query_products(ctx context.Context, fie
 				return ec.fieldContext_Product_Description(ctx, field)
 			case "Price":
 				return ec.fieldContext_Product_Price(ctx, field)
+			case "order":
+				return ec.fieldContext_Product_order(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Product", field.Name)
 		},
@@ -2829,6 +2841,8 @@ func (ec *executionContext) fieldContext_Query_findProduct(ctx context.Context, 
 				return ec.fieldContext_Product_Description(ctx, field)
 			case "Price":
 				return ec.fieldContext_Product_Price(ctx, field)
+			case "order":
+				return ec.fieldContext_Product_order(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Product", field.Name)
 		},
@@ -3014,8 +3028,6 @@ func (ec *executionContext) fieldContext_Query_orders(ctx context.Context, field
 				return ec.fieldContext_Order_table_id(ctx, field)
 			case "total_price":
 				return ec.fieldContext_Order_total_price(ctx, field)
-			case "productsID":
-				return ec.fieldContext_Order_productsID(ctx, field)
 			case "products":
 				return ec.fieldContext_Order_products(ctx, field)
 			}
@@ -3071,8 +3083,6 @@ func (ec *executionContext) fieldContext_Query_findOrder(ctx context.Context, fi
 				return ec.fieldContext_Order_table_id(ctx, field)
 			case "total_price":
 				return ec.fieldContext_Order_total_price(ctx, field)
-			case "productsID":
-				return ec.fieldContext_Order_productsID(ctx, field)
 			case "products":
 				return ec.fieldContext_Order_products(ctx, field)
 			}
@@ -3875,6 +3885,8 @@ func (ec *executionContext) fieldContext_User_Products(ctx context.Context, fiel
 				return ec.fieldContext_Product_Description(ctx, field)
 			case "Price":
 				return ec.fieldContext_Product_Price(ctx, field)
+			case "order":
+				return ec.fieldContext_Product_order(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Product", field.Name)
 		},
@@ -6270,10 +6282,6 @@ func (ec *executionContext) _Order(ctx context.Context, sel ast.SelectionSet, ob
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "productsID":
-
-			out.Values[i] = ec._Order_productsID(ctx, field, obj)
-
 		case "products":
 
 			out.Values[i] = ec._Order_products(ctx, field, obj)
@@ -6333,6 +6341,13 @@ func (ec *executionContext) _Product(ctx context.Context, sel ast.SelectionSet, 
 		case "Price":
 
 			out.Values[i] = ec._Product_Price(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "order":
+
+			out.Values[i] = ec._Product_order(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -7829,38 +7844,6 @@ func (ec *executionContext) marshalOProduct2ᚖgithubᚗcomᚋCaicrsᚋPayfood�
 		return graphql.Null
 	}
 	return ec._Product(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalOString2ᚕᚖstring(ctx context.Context, v interface{}) ([]*string, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*string, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalOString2ᚖstring(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) marshalOString2ᚕᚖstring(ctx context.Context, sel ast.SelectionSet, v []*string) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	for i := range v {
-		ret[i] = ec.marshalOString2ᚖstring(ctx, sel, v[i])
-	}
-
-	return ret
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
