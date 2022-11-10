@@ -20,6 +20,6 @@ func InitDb() (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	db.AutoMigrate(&schemas.Order{}, &schemas.Product{}, &schemas.Table{}, &schemas.User{}, &schemas.Client{}, &schemas.Fidelity{})
+	db.AutoMigrate(&schemas.User{}, &schemas.Meetup{})
 	return db, nil
 }

@@ -10,7 +10,6 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/Caicrs/Payfood-backend/common"
 	"github.com/Caicrs/Payfood-backend/graph/generated"
-	graph "github.com/Caicrs/Payfood-backend/graph/resolvers"
 	"github.com/joho/godotenv"
 )
 
@@ -31,7 +30,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{}))
 
 	customCtx := &common.CustomContext{
 		Database: db,

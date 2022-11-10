@@ -2,100 +2,62 @@
 
 package model
 
-type Client struct {
-	ID       string  `json:"Id"`
-	Name     *string `json:"Name"`
-	Email    *string `json:"Email"`
-	Password *string `json:"Password"`
-	Cpf      *string `json:"CPF"`
-	Phone    *string `json:"Phone"`
+import (
+	"time"
+)
+
+type AuthResponse struct {
+	AuthToken *AuthToken `json:"authToken"`
+	User      *User      `json:"user"`
 }
 
-type Fidelity struct {
-	ID       string  `json:"Id"`
-	ClientID *string `json:"ClientId"`
-	Score    *int    `json:"Score"`
+type AuthToken struct {
+	AccessToken string    `json:"accessToken"`
+	ExpiredAt   time.Time `json:"expiredAt"`
 }
 
-type NewClient struct {
-	Name     string `json:"Name"`
-	Email    string `json:"Email"`
-	Password string `json:"Password"`
-	Cpf      string `json:"CPF"`
-	Phone    string `json:"Phone"`
+type LoginInput struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
-type NewFidelity struct {
-	ClientID string `json:"ClientId"`
-	Score    int    `json:"Score"`
+type Meetup struct {
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	User        *User  `json:"user"`
 }
 
-type NewOrder struct {
-	MarketplaceUserID string  `json:"marketplace_user_id"`
-	ClientID          string  `json:"ClientId"`
-	TableID           string  `json:"TableId"`
-	TotalPrice        float64 `json:"TotalPrice"`
+type MeetupFilter struct {
+	Name *string `json:"name"`
 }
 
-type NewProduct struct {
-	MarketplaceID string  `json:"MarketplaceId"`
-	Name          string  `json:"Name"`
-	Description   string  `json:"Description"`
-	Price         float64 `json:"Price"`
+type NewMeetup struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
-type NewTable struct {
-	Number int    `json:"Number"`
-	Qrcode string `json:"Qrcode"`
+type RegisterInput struct {
+	Username        string `json:"username"`
+	Email           string `json:"email"`
+	Password        string `json:"password"`
+	ConfirmPassword string `json:"confirmPassword"`
+	FirstName       string `json:"firstName"`
+	LastName        string `json:"lastName"`
 }
 
-type NewUser struct {
-	Name        string        `json:"Name"`
-	Description string        `json:"Description"`
-	Cnpj        string        `json:"CNPJ"`
-	Email       string        `json:"Email"`
-	Password    string        `json:"Password"`
-	Image       string        `json:"Image"`
-	Superadmin  bool          `json:"Superadmin"`
-	Admin       bool          `json:"Admin"`
-	Products    []*NewProduct `json:"Products"`
-	Tables      []*NewTable   `json:"Tables"`
-}
-
-type Order struct {
-	ID                int        `json:"id"`
-	MarketplaceUserID string     `json:"marketplace_user_id"`
-	ClientID          string     `json:"client_id"`
-	TableID           string     `json:"table_id"`
-	TotalPrice        float64    `json:"total_price"`
-	ProductsID        []*string  `json:"productsID"`
-	Products          []*Product `json:"products"`
-}
-
-type Product struct {
-	ID            int     `json:"Id"`
-	MarketplaceID string  `json:"MarketplaceId"`
-	Name          string  `json:"Name"`
-	Description   string  `json:"Description"`
-	Price         float64 `json:"Price"`
-}
-
-type Table struct {
-	ID     string  `json:"Id"`
-	Number *int    `json:"Number"`
-	Qrcode *string `json:"Qrcode"`
+type UpdateMeetup struct {
+	Name        *string `json:"name"`
+	Description *string `json:"description"`
 }
 
 type User struct {
-	ID          string     `json:"Id"`
-	Name        *string    `json:"Name"`
-	Description *string    `json:"Description"`
-	Cnpj        *string    `json:"CNPJ"`
-	Email       *string    `json:"Email"`
-	Password    *string    `json:"Password"`
-	Image       *string    `json:"Image"`
-	Superadmin  *bool      `json:"Superadmin"`
-	Admin       *bool      `json:"Admin"`
-	Products    []*Product `json:"Products"`
-	Tables      []*Table   `json:"Tables"`
+	ID        string    `json:"id"`
+	Username  string    `json:"username"`
+	Email     string    `json:"email"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
+	Meetups   []*Meetup `json:"meetups"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }

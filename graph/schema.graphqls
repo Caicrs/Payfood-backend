@@ -1,160 +1,70 @@
-# GraphQL schema example
-#
-# https://gqlgen.com/getting-started/
+scalar Time
 
-# Client | create + queryAll + query(find: CapsulesFind, limit: Int, offset: Int, order: String, sort: String) + QueryUpdate(id) + queryDelete(id)
-#
-#
-#
-#
-
-# TABLES STRUCTS ----------------------------
-# Orders struct
-type Order {
-  gorm.Model
-  id: Int!
-  marketplace_user_id: String!
-  client_id: String!
-  table_id: String!
-  total_price: Float!
-  ProductsID: [String]
-  products: [Product!]! `gorm:"foreignKey:CompanyRefer"`
+type AuthToken {
+  accessToken: String!
+  expiredAt: Time!
 }
 
-# NewOrder
-input NewOrder{
-  marketplace_user_id: String!
-  ClientId: String!
-  TableId: String!
-  TotalPrice: Float!
+type AuthResponse {
+  authToken: AuthToken!
+  user: User!
 }
 
-# User struct
 type User {
-  Id: ID!
-  Name: String
-  Description: String
-  CNPJ: String
-  Email: String
-  Password: String
-  Image: String
-  Superadmin: Boolean
-  Admin: Boolean
-  Products: [Product]
-  Tables: [Table]
+  id: ID!
+  username: String!
+  email: String!
+  firstName: String!
+  lastName: String!
+  meetups: [Meetup!]!
+  createdAt: Time!
+  updatedAt: Time!
 }
 
-# New User
-input NewUser {
-  Name: String!
-  Description: String!
-  CNPJ: String!
-  Email: String!
-  Password: String!
-  Image: String!
-  Superadmin: Boolean!
-  Admin: Boolean!
-  Products: [NewProduct]
-  Tables: [NewTable]
+type Meetup {
+  id: ID!
+  name: String!
+  description: String!
+  user: User!
 }
 
-# NewProduct
-  input NewProduct {
-  MarketplaceId: String!
-  Name: String!
-  Description: String!
-  Price: Float!
+input RegisterInput {
+  username: String!
+  email: String!
+  password: String!
+  confirmPassword: String!
+  firstName: String!
+  lastName: String!
 }
 
-# Tables struct
-type Table {
-  Id: ID!
-  Number: Int
-  Qrcode: String
+input LoginInput {
+  email: String!
+  password: String!
 }
 
-# Product struct
-type Product {
-  Id: Int!
-  MarketplaceId: String!
-  Name: String!
-  Description: String!
-  Price: Float!
+input NewMeetup {
+  name: String!
+  description: String!
 }
 
-
-# Fidelity struct
-type Fidelity {
-  Id: ID!
-  ClientId: String
-  Score: Int
+input UpdateMeetup {
+  name: String
+  description: String
 }
 
-# Client struct
-type Client {
-  Id: ID!
-  Name: String
-  Email: String
-  Password: String
-  CPF: String
-  Phone: String
+input MeetupFilter {
+  name: String
 }
 
-# INPUTS STRUCTS ----------------------------
-
-# New Client
-input NewClient{
-  Name: String!
-  Email: String!
-  Password: String!
-  CPF: String!
-  Phone: String!
-}
-
-# NewTables 
-input NewTable {
-  Number: Int!
-  Qrcode: String!
-}
-
-
-
-# NewFidelity
-input NewFidelity {
-  ClientId: String!
-  Score: Int!
+type Query {
+  meetups(filter: MeetupFilter, limit: Int = 10, offset: Int = 0): [Meetup!]!
+  user(id: ID!): User!
 }
 
 type Mutation {
-  # Admin side 
-  createUser(input: NewUser!): User!
-  deleteUser(id:ID!): Boolean!
-
-  createProduct(input: NewProduct!): Product!
-  createTable(input: NewTable!): Table!
-  # Customer side
-  createOrder(input: NewOrder,products: [NewProduct]): Order!
-  createFidelity(input: NewFidelity!): Fidelity!
-  createClient(input: NewClient!): Client!
-}
-
-# QUERY -------------------------------------
-type Query {
-  users: [User]
-  findUser(id:ID!): [User]
-
-  tables: [Table]
-  findTables(id:ID!): [Table]
-
-  products: [Product]
-  findProduct(id:ID!): [Product]
-
-  clients: [Client]
-  findClient(id:ID!): [Client]
-
-  orders:[Order]
-  findOrder(id:ID!): [Order]
-
-  fidelity: [Fidelity]
-  findFidelity(id:ID!): [Fidelity]
+  register(input: RegisterInput!): AuthResponse!
+  login(input: LoginInput!): AuthResponse!
+  createMeetup(input: NewMeetup!): Meetup!
+  updateMeetup(id: ID!, input: UpdateMeetup!): Meetup!
+  deleteMeetup(id: ID!): Boolean!
 }
