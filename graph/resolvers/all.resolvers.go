@@ -7,31 +7,40 @@ import (
 	"github.com/Caicrs/Payfood-backend/common"
 	"github.com/Caicrs/Payfood-backend/graph/generated"
 	"github.com/Caicrs/Payfood-backend/graph/model"
-	uuid "github.com/satori/go.uuid"
 )
 
-func (r *mutationResolver) CreateOrder(ctx context.Context, input model.NewOrder) (*model.Order, error) {
+func (r *mutationResolver) CreateOrder(ctx context.Context, input *model.NewOrder, products []*model.NewProduct) (*model.Order, error) {
 
 	// context
 	context := common.GetContext(ctx)
-	Order := &model.Order{
-		ID:                fmt.Sprintf("%v", uuid.NewV4()),
-		MarketplaceUserID: &input.MarketplaceUserID,
-		ClientID:          &input.ClientID,
-		TableID:           &input.TableID,
-		TotalPrice:        &input.TotalPrice,
+	order := model.Order{
+		MarketplaceUserID: input.MarketplaceUserID,
+		ClientID:          input.ClientID,
+		TableID:           input.TableID,
+		TotalPrice:        input.TotalPrice,
 	}
-	err := context.Database.Create(&Order).Error
+
+	order.Products = make([]*model.Product, len(products))
+
+	for index, item := range products {
+		order.Products[index] = &model.Product{
+			MarketplaceID: item.MarketplaceID,
+			Name:          item.Name,
+			Description:   item.Description,
+			Price:         item.Price,
+		}
+	}
+
+	err := context.Database.Create(&order).Error
 	if err != nil {
 		return nil, err
 	}
-	return Order, nil
+	return &order, nil
 }
 
 func (r *mutationResolver) CreateClient(ctx context.Context, input model.NewClient) (*model.Client, error) {
 	context := common.GetContext(ctx)
 	Clients := &model.Client{
-		ID:       fmt.Sprintf("%v", uuid.NewV4()),
 		Name:     &input.Name,
 		Email:    &input.Email,
 		Password: &input.Password,
@@ -48,7 +57,6 @@ func (r *mutationResolver) CreateClient(ctx context.Context, input model.NewClie
 func (r *mutationResolver) CreateFidelity(ctx context.Context, input model.NewFidelity) (*model.Fidelity, error) {
 	context := common.GetContext(ctx)
 	Fidelity := &model.Fidelity{
-		ID:       fmt.Sprintf("%v", uuid.NewV4()),
 		ClientID: &input.ClientID,
 		Score:    &input.Score,
 	}
@@ -62,11 +70,10 @@ func (r *mutationResolver) CreateFidelity(ctx context.Context, input model.NewFi
 func (r *mutationResolver) CreateProduct(ctx context.Context, input model.NewProduct) (*model.Product, error) {
 	context := common.GetContext(ctx)
 	Products := &model.Product{
-		ID:            fmt.Sprintf("%v", uuid.NewV4()),
-		MarketplaceID: &input.MarketplaceID,
-		Name:          &input.Name,
-		Description:   &input.Description,
-		Price:         &input.Price,
+		MarketplaceID: input.MarketplaceID,
+		Name:          input.Name,
+		Description:   input.Description,
+		Price:         input.Price,
 	}
 	err := context.Database.Create(&Products).Error
 	if err != nil {
@@ -78,7 +85,6 @@ func (r *mutationResolver) CreateProduct(ctx context.Context, input model.NewPro
 func (r *mutationResolver) CreateTable(ctx context.Context, input model.NewTable) (*model.Table, error) {
 	context := common.GetContext(ctx)
 	Tables := &model.Table{
-		ID:     fmt.Sprintf("%v", uuid.NewV4()),
 		Number: &input.Number,
 		Qrcode: &input.Qrcode,
 	}
@@ -92,7 +98,6 @@ func (r *mutationResolver) CreateTable(ctx context.Context, input model.NewTable
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
 	context := common.GetContext(ctx)
 	Users := &model.User{
-		ID:          fmt.Sprintf("%v", uuid.NewV4()),
 		Name:        &input.Name,
 		Description: &input.Description,
 		Cnpj:        &input.Cnpj,
@@ -109,21 +114,6 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 	return Users, nil
 }
 
-func (r *mutationResolver) UpdateOrder(ctx context.Context, input model.NewOrder) (*model.Order, error) {
-	context := common.GetContext(ctx)
-	Order := &model.Order{
-		MarketplaceUserID: &input.MarketplaceUserID,
-		ClientID:          &input.ClientID,
-		TableID:           &input.TableID,
-		TotalPrice:        &input.TotalPrice,
-	}
-	err := context.Database.Save(&Order).Error
-	if err != nil {
-		return nil, err
-	}
-	return Order, nil
-}
-
 func (r *mutationResolver) DeleteOrder(ctx context.Context, OrderID string) (*model.Order, error) {
 	context := common.GetContext(ctx)
 	var Order *model.Order
@@ -132,16 +122,6 @@ func (r *mutationResolver) DeleteOrder(ctx context.Context, OrderID string) (*mo
 		return nil, err
 	}
 	return Order, nil
-}
-
-func (r *queryResolver) GetOrders(ctx context.Context) ([]*model.Order, error) {
-	context := common.GetContext(ctx)
-	var Orders []*model.Order
-	err := context.Database.Find(&Orders).Error
-	if err != nil {
-		return nil, err
-	}
-	return Orders, nil
 }
 
 func (r *queryResolver) Clients(ctx context.Context) ([]*model.Client, error) {
@@ -204,6 +184,36 @@ func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
 	return Users, nil
 }
 
+func (r *queryResolver) FindUser(ctx context.Context, UserID string) ([]*model.User, error) {
+	context := common.GetContext(ctx)
+	var User []*model.User
+	err := context.Database.Where("id = ?", UserID).Find(&User).Error
+	if err != nil {
+		return nil, err
+	}
+	return User, nil
+}
+
+func (r *queryResolver) FindTables(ctx context.Context, TableID string) ([]*model.Table, error) {
+	context := common.GetContext(ctx)
+	var Table []*model.Table
+	err := context.Database.Where("id = ?", TableID).Find(&Table).Error
+	if err != nil {
+		return nil, err
+	}
+	return Table, nil
+}
+
+func (r *queryResolver) FindProduct(ctx context.Context, ProductID string) ([]*model.Product, error) {
+	context := common.GetContext(ctx)
+	var Product []*model.Product
+	err := context.Database.Where("id = ?", ProductID).Find(&Product).Error
+	if err != nil {
+		return nil, err
+	}
+	return Product, nil
+}
+
 func (r *queryResolver) GetOrder(ctx context.Context, OrderID string) (*model.Order, error) {
 	context := common.GetContext(ctx)
 	var Order *model.Order
@@ -212,6 +222,36 @@ func (r *queryResolver) GetOrder(ctx context.Context, OrderID string) (*model.Or
 		return nil, err
 	}
 	return Order, nil
+}
+
+func (r *queryResolver) FindFidelity(ctx context.Context, FidelityID string) ([]*model.Fidelity, error) {
+	context := common.GetContext(ctx)
+	var Fidelity []*model.Fidelity
+	err := context.Database.Where("id = ?", FidelityID).Find(&Fidelity).Error
+	if err != nil {
+		return nil, err
+	}
+	return Fidelity, nil
+}
+
+func (r *queryResolver) FindClient(ctx context.Context, ClientID string) ([]*model.Client, error) {
+	context := common.GetContext(ctx)
+	var Client []*model.Client
+	err := context.Database.Where("id = ?", ClientID).Find(&Client).Error
+	if err != nil {
+		return nil, err
+	}
+	return Client, nil
+}
+
+// FindOrder is the resolver for the findOrder field.
+func (r *queryResolver) FindOrder(ctx context.Context, id string) ([]*model.Order, error) {
+	panic(fmt.Errorf("not implemented: FindOrder - findOrder"))
+}
+
+// DeleteUser is the resolver for the deleteUser field.
+func (r *mutationResolver) DeleteUser(ctx context.Context, id string) (bool, error) {
+	panic(fmt.Errorf("not implemented: DeleteUser - deleteUser"))
 }
 
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }

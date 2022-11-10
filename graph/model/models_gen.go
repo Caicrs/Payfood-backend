@@ -31,7 +31,7 @@ type NewFidelity struct {
 }
 
 type NewOrder struct {
-	MarketplaceUserID string  `json:"MarketplaceUserId"`
+	MarketplaceUserID string  `json:"marketplace_user_id"`
 	ClientID          string  `json:"ClientId"`
 	TableID           string  `json:"TableId"`
 	TotalPrice        float64 `json:"TotalPrice"`
@@ -50,30 +50,34 @@ type NewTable struct {
 }
 
 type NewUser struct {
-	Name        string `json:"Name"`
-	Description string `json:"Description"`
-	Cnpj        string `json:"CNPJ"`
-	Email       string `json:"Email"`
-	Password    string `json:"Password"`
-	Image       string `json:"Image"`
-	Superadmin  bool   `json:"Superadmin"`
-	Admin       bool   `json:"Admin"`
+	Name        string        `json:"Name"`
+	Description string        `json:"Description"`
+	Cnpj        string        `json:"CNPJ"`
+	Email       string        `json:"Email"`
+	Password    string        `json:"Password"`
+	Image       string        `json:"Image"`
+	Superadmin  bool          `json:"Superadmin"`
+	Admin       bool          `json:"Admin"`
+	Products    []*NewProduct `json:"Products"`
+	Tables      []*NewTable   `json:"Tables"`
 }
 
 type Order struct {
-	ID                string   `json:"Id"`
-	MarketplaceUserID *string  `json:"MarketplaceUserId"`
-	ClientID          *string  `json:"ClientId"`
-	TableID           *string  `json:"TableId"`
-	TotalPrice        *float64 `json:"TotalPrice"`
+	ID                int        `json:"id"`
+	MarketplaceUserID string     `json:"marketplace_user_id"`
+	ClientID          string     `json:"client_id"`
+	TableID           string     `json:"table_id"`
+	TotalPrice        float64    `json:"total_price"`
+	ProductsID        []*string  `json:"productsID"`
+	Products          []*Product `json:"products"`
 }
 
 type Product struct {
-	ID            string   `json:"Id"`
-	MarketplaceID *string  `json:"MarketplaceId"`
-	Name          *string  `json:"Name"`
-	Description   *string  `json:"Description"`
-	Price         *float64 `json:"Price"`
+	ID            int     `json:"Id"`
+	MarketplaceID string  `json:"MarketplaceId"`
+	Name          string  `json:"Name"`
+	Description   string  `json:"Description"`
+	Price         float64 `json:"Price"`
 }
 
 type Table struct {
@@ -83,13 +87,15 @@ type Table struct {
 }
 
 type User struct {
-	ID          string  `json:"id"`
-	Name        *string `json:"Name"`
-	Description *string `json:"Description"`
-	Cnpj        *string `json:"CNPJ"`
-	Email       *string `json:"Email"`
-	Password    *string `json:"Password"`
-	Image       *string `json:"Image"`
-	Superadmin  *bool   `json:"Superadmin"`
-	Admin       *bool   `json:"Admin"`
+	ID          string     `json:"Id"`
+	Name        *string    `json:"Name"`
+	Description *string    `json:"Description"`
+	Cnpj        *string    `json:"CNPJ"`
+	Email       *string    `json:"Email"`
+	Password    *string    `json:"Password"`
+	Image       *string    `json:"Image"`
+	Superadmin  *bool      `json:"Superadmin"`
+	Admin       *bool      `json:"Admin"`
+	Products    []*Product `json:"Products"`
+	Tables      []*Table   `json:"Tables"`
 }

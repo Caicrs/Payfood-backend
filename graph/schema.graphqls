@@ -11,16 +11,27 @@
 # TABLES STRUCTS ----------------------------
 # Orders struct
 type Order {
-  Id: ID!
-  MarketplaceUserId: String
-  ClientId: String
-  TableId: String
-  TotalPrice: Float
+  gorm.Model
+  id: Int!
+  marketplace_user_id: String!
+  client_id: String!
+  table_id: String!
+  total_price: Float!
+  ProductsID: [String]
+  products: [Product!]! `gorm:"foreignKey:CompanyRefer"`
+}
+
+# NewOrder
+input NewOrder{
+  marketplace_user_id: String!
+  ClientId: String!
+  TableId: String!
+  TotalPrice: Float!
 }
 
 # User struct
 type User {
-  id: ID!
+  Id: ID!
   Name: String
   Description: String
   CNPJ: String
@@ -29,6 +40,30 @@ type User {
   Image: String
   Superadmin: Boolean
   Admin: Boolean
+  Products: [Product]
+  Tables: [Table]
+}
+
+# New User
+input NewUser {
+  Name: String!
+  Description: String!
+  CNPJ: String!
+  Email: String!
+  Password: String!
+  Image: String!
+  Superadmin: Boolean!
+  Admin: Boolean!
+  Products: [NewProduct]
+  Tables: [NewTable]
+}
+
+# NewProduct
+  input NewProduct {
+  MarketplaceId: String!
+  Name: String!
+  Description: String!
+  Price: Float!
 }
 
 # Tables struct
@@ -40,12 +75,13 @@ type Table {
 
 # Product struct
 type Product {
-  Id: ID!
-  MarketplaceId: String
-  Name: String
-  Description: String
-  Price: Float
+  Id: Int!
+  MarketplaceId: String!
+  Name: String!
+  Description: String!
+  Price: Float!
 }
+
 
 # Fidelity struct
 type Fidelity {
@@ -67,32 +103,12 @@ type Client {
 # INPUTS STRUCTS ----------------------------
 
 # New Client
-input NewClient {
+input NewClient{
   Name: String!
   Email: String!
   Password: String!
   CPF: String!
   Phone: String!
-}
-
-# New User
-input NewUser {
-  Name: String!
-  Description: String!
-  CNPJ: String!
-  Email: String!
-  Password: String!
-  Image: String!
-  Superadmin: Boolean!
-  Admin: Boolean!
-}
-
-# NewOrder
-input NewOrder{
-  MarketplaceUserId: String!
-  ClientId: String!
-  TableId: String!
-  TotalPrice: Float!
 }
 
 # NewTables 
@@ -101,13 +117,7 @@ input NewTable {
   Qrcode: String!
 }
 
-# NewProduct
-input NewProduct {
-  MarketplaceId: String!
-  Name: String!
-  Description: String!
-  Price: Float!
-}
+
 
 # NewFidelity
 input NewFidelity {
@@ -118,10 +128,12 @@ input NewFidelity {
 type Mutation {
   # Admin side 
   createUser(input: NewUser!): User!
+  deleteUser(id:ID!): Boolean!
+
   createProduct(input: NewProduct!): Product!
   createTable(input: NewTable!): Table!
   # Customer side
-  createOrder(input: NewOrder!): Order!
+  createOrder(input: NewOrder,products: [NewProduct]): Order!
   createFidelity(input: NewFidelity!): Fidelity!
   createClient(input: NewClient!): Client!
 }
@@ -129,10 +141,20 @@ type Mutation {
 # QUERY -------------------------------------
 type Query {
   users: [User]
+  findUser(id:ID!): [User]
+
   tables: [Table]
+  findTables(id:ID!): [Table]
+
   products: [Product]
+  findProduct(id:ID!): [Product]
 
   clients: [Client]
+  findClient(id:ID!): [Client]
+
   orders:[Order]
+  findOrder(id:ID!): [Order]
+
   fidelity: [Fidelity]
+  findFidelity(id:ID!): [Fidelity]
 }
