@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 scalar Time
 
 type AuthToken {
@@ -59,12 +60,200 @@ input MeetupFilter {
 type Query {
   meetups(filter: MeetupFilter, limit: Int = 10, offset: Int = 0): [Meetup!]!
   user(id: ID!): User!
+=======
+# _________________________ MARKETPLACE SPACE _____________________________
+
+type Marketplaces {
+  id: ID!
+  name: String!
+  description: String!
+  cnpj: String!
+  email: String!
+  password: String!
+  version: String!
+  products: [Products!]!
+  tables: [Tables!]!
+  orders: [Orders!]!
+}
+type Products {
+  id: ID!
+  name: String!
+  description: String!
+  price: Float!
+  images: [String!]!
+  marketplace_id: ID!
 }
 
+type Tables {
+  id: ID!
+  number:Int!
+  qrcode: String!
+  marketplace_id: ID!
+}
+
+# _________________________ CLIENT SPACE _____________________________
+
+type Clients {
+  id: ID!
+  name: String!
+  phone: String!
+  cpf: String!
+  email: String!
+  password: String!
+  fidelity_id: ID
+  orders: [Orders!]!
+  miniPass: Int!
+}
+
+scalar Date
+
+type Orders {
+  id: ID!
+  client_id: ID!
+  marketplace_id: ID!
+  table_id: ID!
+  products_id: [ID!]!
+  total_price: Float!
+  paid: Boolean! 
+  createdAt: Date!
+}
+
+###----------------------------------
+
+input NewMarketplace {
+  id: String!
+  name: String!
+  description: String!
+  cnpj: String!
+  email: String!
+  password: String!
+  version: String!
+}
+
+input UpdateMarketplace {
+  name: String!
+  description: String!
+  cnpj: String!
+  email: String!
+  password: String!
+  version: String!
+}
+
+input NewProduct {
+  id: String!
+  name: String!
+  description: String!
+  price: Float!
+  images: [String!]!
+  marketplaceID: String!
+}
+
+input UpdateProduct {
+  name: String!
+  description: String!
+  price: Float!
+  images: [String!]!
+}
+
+input NewTable {
+  id: String!
+  number: Int!
+  qrcode: String!
+  marketplaceID: String!
+}
+
+input UpdateTable {
+  number: Int!
+  qrcode: String!
+>>>>>>> main
+}
+
+input NewClient {
+  id: String!
+  name: String!
+  phone: String!
+  cpf: String!
+  email: String!
+  password: String!
+  miniPass: Int!
+}
+
+input UpdateClient {
+  name: String!
+  phone: String!
+  cpf: String!
+  email: String!
+  password: String!
+  miniPass: Int!
+}
+
+input NewOrder {
+  id: String!
+  clientID: String!
+  marketplaceID: String!
+  tableID: String!
+  productsID: [String!]!
+  totalPrice: Float!
+  paid: Boolean!
+  created_at: String!
+}
+
+input UpdateOrder {
+  clientID: String!
+  marketplaceID: String!
+  tableID: String!
+  productsID: [String!]!
+  totalPrice: Float!
+  paid: Boolean!
+}
+
+###----------------------------------
 type Mutation {
+<<<<<<< HEAD
   register(input: RegisterInput!): AuthResponse!
   login(input: LoginInput!): AuthResponse!
   createMeetup(input: NewMeetup!): Meetup!
   updateMeetup(id: ID!, input: UpdateMeetup!): Meetup!
   deleteMeetup(id: ID!): Boolean!
 }
+=======
+  # Marketplace
+  createMarketplace(input: NewMarketplace!): Marketplaces!
+  updateMarketplace(input: UpdateMarketplace!,id: String!): Marketplaces!
+  deleteMarketplace(id: String!): Marketplaces!
+  # Product
+  createProduct(input: NewProduct!): Products!
+  updateProduct(input: UpdateProduct!,id: String!): Products!
+  deleteProduct(id: String!): Products!
+  # Table
+  createTable(input: NewTable!): Tables!
+  updateTable(input: UpdateTable!,id: String!): Tables!
+  deleteTable(id: String!): Tables!
+  # Clients
+  createClient(input: NewClient!): Clients!
+  updateClient(input: UpdateClient!,id: String!): Clients!
+  deleteClient(id: String!): Clients!
+  # Order
+  createOrder(input: NewOrder!): Orders!
+  updateOrder(input: UpdateOrder!,id: String!): Orders!
+  deleteOrder(id: String!): Orders!
+}
+###----------------------------------
+type Query {
+  # Marketplace
+  getMarketplaces: [Marketplaces!]!
+  getOneMarketplace(id: String!): Marketplaces!
+  # Product
+  getProducts: [Products!]!
+  getOneProduct(id: String!): Products!
+  # Table
+   getTables: [Tables!]!
+  getOneTable(id: String!): Tables!
+  # Clients
+   getClients: [Clients!]!
+  getOneClient(id: String!): Clients!
+  # Order
+   getOrders: [Orders!]!
+  getOneOrder(id: String!): Orders!
+}
+>>>>>>> main

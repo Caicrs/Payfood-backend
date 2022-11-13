@@ -1,27 +1,16 @@
-type User {
-  Id: ID!
-  Name: String!
-  Description: String!
-  CNPJ: String!
-  Email: String!
-  Password: String!
-  Image: String
-  Products: [Products]!
-  Orders: [Order!]!
-  Tables: [Tables!]!
-  Superadmin: Boolean!
-  Admin: Boolean!
-}
+# _________________________ MARKETPLACE SPACE _____________________________
 
-type Client {
-  Id: ID!
-  Name: String!
-  Email: String!
-  Password: String!
-  CPF: String!
-  Phone: String!
-  FidelityScore: [Fidelity!]!
+type Marketplaces {
+  id: String
+  name: String!
+  description: String!
+  cnpj: String!
+  email: String!
+  password: String!
+  version: String!
+  products: [Products!]!
 }
+<<<<<<< HEAD
 
 type Fidelity {
   Id: ID!
@@ -34,22 +23,82 @@ type Auth {
   Password: String!
 }
 
+=======
+>>>>>>> main
 type Products {
   Id: ID!
-  Name: String!
-  Description: String!
-  Price: Float!
+  name: String!
+  description: String!
+  price: Float!
+  images: [String!]!
+  marketplace_id: Int!
 }
 
-type Tables {
-  Id: ID!
-  Qrcode: String!
+###----------------------------------
+
+input NewMarketplace {
+  id: String!
+  name: String!
+  description: String!
+  cnpj: String!
+  email: String!
+  password: String!
+  version: String!
 }
 
+<<<<<<< HEAD
 type Orders {
   Id: ID!
   MarketplaceId: String!
   TableId: String!
   TotalPrice: Float!
   Products_id: [Products!]!
+=======
+input NewProduct {
+  id: String!
+  name: String!
+  description: String!
+  price: Float!
+  images: [String!]!
+  marketplaceID: String!
+}
+
+input NewTable {
+  id: String!
+  number: Int!
+  qrcode: String!
+  marketplaceID: String!
+}
+
+input NewClient {
+  id: String!
+  name: String!
+  phone: String!
+  cpf: String!
+  email: String!
+  password: String!
+}
+
+input NewOrder {
+  id: String!
+  clientID: String!
+  marketplaceID: String!
+  tableID: String!
+  productsID: [String!]!
+  totalPrice: Float!
+  paid: Boolean!
+}
+
+
+
+###----------------------------------
+type Mutation {
+  createMarketplace(input: NewMarketplace!): Marketplaces!
+  createProduct(input: NewProduct!): Products!
+}
+###----------------------------------
+type Query {
+  getMarketplaces: [Marketplaces!]!
+  getProducts: [Products!]!
+>>>>>>> main
 }
