@@ -11,99 +11,129 @@ import (
 	"github.com/Caicrs/Payfood-backend/graph/model"
 )
 
-// CreateUser is the resolver for the createUser field.
-func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
-	panic(fmt.Errorf("not implemented: CreateUser - createUser"))
+// CreateMarketplace is the resolver for the createMarketplace field.
+func (r *mutationResolver) CreateMarketplace(ctx context.Context, input model.NewMarketplace) (*model.Marketplaces, error) {
+	panic(fmt.Errorf("not implemented: CreateMarketplace - createMarketplace"))
 }
 
-// DeleteUser is the resolver for the deleteUser field.
-func (r *mutationResolver) DeleteUser(ctx context.Context, id string) (bool, error) {
-	panic(fmt.Errorf("not implemented: DeleteUser - deleteUser"))
+// UpdateMarketplace is the resolver for the updateMarketplace field.
+func (r *mutationResolver) UpdateMarketplace(ctx context.Context, input model.UpdateMarketplace, id string) (*model.Marketplaces, error) {
+	panic(fmt.Errorf("not implemented: UpdateMarketplace - updateMarketplace"))
+}
+
+// DeleteMarketplace is the resolver for the deleteMarketplace field.
+func (r *mutationResolver) DeleteMarketplace(ctx context.Context, id string) (*model.Marketplaces, error) {
+	panic(fmt.Errorf("not implemented: DeleteMarketplace - deleteMarketplace"))
 }
 
 // CreateProduct is the resolver for the createProduct field.
-func (r *mutationResolver) CreateProduct(ctx context.Context, input model.NewProduct) (*model.Product, error) {
+func (r *mutationResolver) CreateProduct(ctx context.Context, input model.NewProduct) (*model.Products, error) {
 	panic(fmt.Errorf("not implemented: CreateProduct - createProduct"))
 }
 
+// UpdateProduct is the resolver for the updateProduct field.
+func (r *mutationResolver) UpdateProduct(ctx context.Context, input model.UpdateProduct, id string) (*model.Products, error) {
+	panic(fmt.Errorf("not implemented: UpdateProduct - updateProduct"))
+}
+
+// DeleteProduct is the resolver for the deleteProduct field.
+func (r *mutationResolver) DeleteProduct(ctx context.Context, id string) (*model.Products, error) {
+	panic(fmt.Errorf("not implemented: DeleteProduct - deleteProduct"))
+}
+
 // CreateTable is the resolver for the createTable field.
-func (r *mutationResolver) CreateTable(ctx context.Context, input model.NewTable) (*model.Table, error) {
+func (r *mutationResolver) CreateTable(ctx context.Context, input model.NewTable) (*model.Tables, error) {
 	panic(fmt.Errorf("not implemented: CreateTable - createTable"))
 }
 
-// CreateOrder is the resolver for the createOrder field.
-func (r *mutationResolver) CreateOrder(ctx context.Context, input *model.NewOrder) (*model.Order, error) {
-	panic(fmt.Errorf("not implemented: CreateOrder - createOrder"))
+// UpdateTable is the resolver for the updateTable field.
+func (r *mutationResolver) UpdateTable(ctx context.Context, input model.UpdateTable, id string) (*model.Tables, error) {
+	panic(fmt.Errorf("not implemented: UpdateTable - updateTable"))
 }
 
-// CreateFidelity is the resolver for the createFidelity field.
-func (r *mutationResolver) CreateFidelity(ctx context.Context, input model.NewFidelity) (*model.Fidelity, error) {
-	panic(fmt.Errorf("not implemented: CreateFidelity - createFidelity"))
+// DeleteTable is the resolver for the deleteTable field.
+func (r *mutationResolver) DeleteTable(ctx context.Context, id string) (*model.Tables, error) {
+	panic(fmt.Errorf("not implemented: DeleteTable - deleteTable"))
 }
 
 // CreateClient is the resolver for the createClient field.
-func (r *mutationResolver) CreateClient(ctx context.Context, input model.NewClient) (*model.Client, error) {
+func (r *mutationResolver) CreateClient(ctx context.Context, input model.NewClient) (*model.Clients, error) {
 	panic(fmt.Errorf("not implemented: CreateClient - createClient"))
 }
 
-// Users is the resolver for the users field.
-func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
-	panic(fmt.Errorf("not implemented: Users - users"))
+// UpdateClient is the resolver for the updateClient field.
+func (r *mutationResolver) UpdateClient(ctx context.Context, input model.UpdateClient, id string) (*model.Clients, error) {
+	panic(fmt.Errorf("not implemented: UpdateClient - updateClient"))
 }
 
-// FindUser is the resolver for the findUser field.
-func (r *queryResolver) FindUser(ctx context.Context, id string) ([]*model.User, error) {
-	panic(fmt.Errorf("not implemented: FindUser - findUser"))
+// DeleteClient is the resolver for the deleteClient field.
+func (r *mutationResolver) DeleteClient(ctx context.Context, id string) (*model.Clients, error) {
+	panic(fmt.Errorf("not implemented: DeleteClient - deleteClient"))
 }
 
-// Tables is the resolver for the tables field.
-func (r *queryResolver) Tables(ctx context.Context) ([]*model.Table, error) {
-	panic(fmt.Errorf("not implemented: Tables - tables"))
+// CreateOrder is the resolver for the createOrder field.
+func (r *mutationResolver) CreateOrder(ctx context.Context, input model.NewOrder) (*model.Orders, error) {
+	panic(fmt.Errorf("not implemented: CreateOrder - createOrder"))
 }
 
-// FindTables is the resolver for the findTables field.
-func (r *queryResolver) FindTables(ctx context.Context, id string) ([]*model.Table, error) {
-	panic(fmt.Errorf("not implemented: FindTables - findTables"))
+// UpdateOrder is the resolver for the updateOrder field.
+func (r *mutationResolver) UpdateOrder(ctx context.Context, input model.UpdateOrder, id string) (*model.Orders, error) {
+	panic(fmt.Errorf("not implemented: UpdateOrder - updateOrder"))
 }
 
-// Products is the resolver for the products field.
-func (r *queryResolver) Products(ctx context.Context) ([]*model.Product, error) {
-	panic(fmt.Errorf("not implemented: Products - products"))
+// DeleteOrder is the resolver for the deleteOrder field.
+func (r *mutationResolver) DeleteOrder(ctx context.Context, id string) (*model.Orders, error) {
+	panic(fmt.Errorf("not implemented: DeleteOrder - deleteOrder"))
 }
 
-// FindProduct is the resolver for the findProduct field.
-func (r *queryResolver) FindProduct(ctx context.Context, id string) ([]*model.Product, error) {
-	panic(fmt.Errorf("not implemented: FindProduct - findProduct"))
+// GetMarketplaces is the resolver for the getMarketplaces field.
+func (r *queryResolver) GetMarketplaces(ctx context.Context) ([]*model.Marketplaces, error) {
+	panic(fmt.Errorf("not implemented: GetMarketplaces - getMarketplaces"))
 }
 
-// Clients is the resolver for the clients field.
-func (r *queryResolver) Clients(ctx context.Context) ([]*model.Client, error) {
-	panic(fmt.Errorf("not implemented: Clients - clients"))
+// GetOneMarketplace is the resolver for the getOneMarketplace field.
+func (r *queryResolver) GetOneMarketplace(ctx context.Context, id string) (*model.Marketplaces, error) {
+	panic(fmt.Errorf("not implemented: GetOneMarketplace - getOneMarketplace"))
 }
 
-// FindClient is the resolver for the findClient field.
-func (r *queryResolver) FindClient(ctx context.Context, id string) ([]*model.Client, error) {
-	panic(fmt.Errorf("not implemented: FindClient - findClient"))
+// GetProducts is the resolver for the getProducts field.
+func (r *queryResolver) GetProducts(ctx context.Context) ([]*model.Products, error) {
+	panic(fmt.Errorf("not implemented: GetProducts - getProducts"))
 }
 
-// Orders is the resolver for the orders field.
-func (r *queryResolver) Orders(ctx context.Context) ([]*model.Order, error) {
-	panic(fmt.Errorf("not implemented: Orders - orders"))
+// GetOneProduct is the resolver for the getOneProduct field.
+func (r *queryResolver) GetOneProduct(ctx context.Context, id string) (*model.Products, error) {
+	panic(fmt.Errorf("not implemented: GetOneProduct - getOneProduct"))
 }
 
-// FindOrder is the resolver for the findOrder field.
-func (r *queryResolver) FindOrder(ctx context.Context, id string) ([]*model.Order, error) {
-	panic(fmt.Errorf("not implemented: FindOrder - findOrder"))
+// GetTables is the resolver for the getTables field.
+func (r *queryResolver) GetTables(ctx context.Context) ([]*model.Tables, error) {
+	panic(fmt.Errorf("not implemented: GetTables - getTables"))
 }
 
-// Fidelity is the resolver for the fidelity field.
-func (r *queryResolver) Fidelity(ctx context.Context) ([]*model.Fidelity, error) {
-	panic(fmt.Errorf("not implemented: Fidelity - fidelity"))
+// GetOneTable is the resolver for the getOneTable field.
+func (r *queryResolver) GetOneTable(ctx context.Context, id string) (*model.Tables, error) {
+	panic(fmt.Errorf("not implemented: GetOneTable - getOneTable"))
 }
 
-// FindFidelity is the resolver for the findFidelity field.
-func (r *queryResolver) FindFidelity(ctx context.Context, id string) ([]*model.Fidelity, error) {
-	panic(fmt.Errorf("not implemented: FindFidelity - findFidelity"))
+// GetClients is the resolver for the getClients field.
+func (r *queryResolver) GetClients(ctx context.Context) ([]*model.Clients, error) {
+	panic(fmt.Errorf("not implemented: GetClients - getClients"))
+}
+
+// GetOneClient is the resolver for the getOneClient field.
+func (r *queryResolver) GetOneClient(ctx context.Context, id string) (*model.Clients, error) {
+	panic(fmt.Errorf("not implemented: GetOneClient - getOneClient"))
+}
+
+// GetOrders is the resolver for the getOrders field.
+func (r *queryResolver) GetOrders(ctx context.Context) ([]*model.Orders, error) {
+	panic(fmt.Errorf("not implemented: GetOrders - getOrders"))
+}
+
+// GetOneOrder is the resolver for the getOneOrder field.
+func (r *queryResolver) GetOneOrder(ctx context.Context, id string) (*model.Orders, error) {
+	panic(fmt.Errorf("not implemented: GetOneOrder - getOneOrder"))
 }
 
 // Mutation returns generated.MutationResolver implementation.
@@ -114,13 +144,3 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *queryResolver) DeleteUser(ctx context.Context, id string) ([]*model.User, error) {
-	panic(fmt.Errorf("not implemented: DeleteUser - deleteUser"))
-}

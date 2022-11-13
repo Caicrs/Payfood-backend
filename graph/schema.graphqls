@@ -1,159 +1,186 @@
-# GraphQL schema example
-#
-# https://gqlgen.com/getting-started/
+# _________________________ MARKETPLACE SPACE _____________________________
 
-# Client | create + queryAll + query(find: CapsulesFind, limit: Int, offset: Int, order: String, sort: String) + QueryUpdate(id) + queryDelete(id)
-#
-#
-#
-#
+type Marketplaces {
+  id: ID!
+  name: String!
+  description: String!
+  cnpj: String!
+  email: String!
+  password: String!
+  version: String!
+  products: [Products!]!
+  tables: [Tables!]!
+  orders: [Orders!]!
+}
+type Products {
+  id: ID!
+  name: String!
+  description: String!
+  price: Float!
+  images: [String!]!
+  marketplace_id: ID!
+}
 
-# TABLES STRUCTS ----------------------------
-# Orders struct
-type Order {
-  id: Int!
-  marketplace_user_id: String!
-  client_id: String!
-  table_id: String!
+type Tables {
+  id: ID!
+  number:Int!
+  qrcode: String!
+  marketplace_id: ID!
+}
+
+# _________________________ CLIENT SPACE _____________________________
+
+type Clients {
+  id: ID!
+  name: String!
+  phone: String!
+  cpf: String!
+  email: String!
+  password: String!
+  fidelity_id: ID
+  orders: [Orders!]!
+  miniPass: Int!
+}
+
+scalar Date
+
+type Orders {
+  id: ID!
+  client_id: ID!
+  marketplace_id: ID!
+  table_id: ID!
+  products_id: [ID!]!
   total_price: Float!
-  products: [Product!]!
+  paid: Boolean! 
+  createdAt: Date!
 }
 
-# NewOrder
-input NewOrder{
-  marketplace_user_id: String!
-  ClientId: String!
-  TableId: String!
-  TotalPrice: Float!
+###----------------------------------
+
+input NewMarketplace {
+  id: String!
+  name: String!
+  description: String!
+  cnpj: String!
+  email: String!
+  password: String!
+  version: String!
 }
 
-# User struct
-type User {
-  Id: ID!
-  Name: String
-  Description: String
-  CNPJ: String
-  Email: String
-  Password: String
-  Image: String
-  Superadmin: Boolean
-  Admin: Boolean
-  Products: [Product]
-  Tables: [Table]
+input UpdateMarketplace {
+  name: String!
+  description: String!
+  cnpj: String!
+  email: String!
+  password: String!
+  version: String!
 }
 
-# New User
-input NewUser {
-  Name: String!
-  Description: String!
-  CNPJ: String!
-  Email: String!
-  Password: String!
-  Image: String!
-  Superadmin: Boolean!
-  Admin: Boolean!
-  Products: [NewProduct]
-  Tables: [NewTable]
+input NewProduct {
+  id: String!
+  name: String!
+  description: String!
+  price: Float!
+  images: [String!]!
+  marketplaceID: String!
 }
 
-# NewProduct
-  input NewProduct {
-  MarketplaceId: String!
-  Name: String!
-  Description: String!
-  Price: Float!
+input UpdateProduct {
+  name: String!
+  description: String!
+  price: Float!
+  images: [String!]!
 }
 
-# Tables struct
-type Table {
-  Id: ID!
-  Number: Int
-  Qrcode: String
-}
-
-# Product struct
-type Product {
-  Id: Int!
-  MarketplaceId: String!
-  Name: String!
-  Description: String!
-  Price: Float!
-  order: Order!
-}
-
-
-# Fidelity struct
-type Fidelity {
-  Id: ID!
-  ClientId: String
-  Score: Int
-}
-
-# Client struct
-type Client {
-  Id: ID!
-  Name: String
-  Email: String
-  Password: String
-  CPF: String
-  Phone: String
-}
-
-# INPUTS STRUCTS ----------------------------
-
-# New Client
-input NewClient{
-  Name: String!
-  Email: String!
-  Password: String!
-  CPF: String!
-  Phone: String!
-}
-
-# NewTables 
 input NewTable {
-  Number: Int!
-  Qrcode: String!
+  id: String!
+  number: Int!
+  qrcode: String!
+  marketplaceID: String!
 }
 
-
-
-# NewFidelity
-input NewFidelity {
-  ClientId: String!
-  Score: Int!
+input UpdateTable {
+  number: Int!
+  qrcode: String!
 }
 
+input NewClient {
+  id: String!
+  name: String!
+  phone: String!
+  cpf: String!
+  email: String!
+  password: String!
+  miniPass: Int!
+}
+
+input UpdateClient {
+  name: String!
+  phone: String!
+  cpf: String!
+  email: String!
+  password: String!
+  miniPass: Int!
+}
+
+input NewOrder {
+  id: String!
+  clientID: String!
+  marketplaceID: String!
+  tableID: String!
+  productsID: [String!]!
+  totalPrice: Float!
+  paid: Boolean!
+  created_at: String!
+}
+
+input UpdateOrder {
+  clientID: String!
+  marketplaceID: String!
+  tableID: String!
+  productsID: [String!]!
+  totalPrice: Float!
+  paid: Boolean!
+}
+
+###----------------------------------
 type Mutation {
-  # Admin side 
-  createUser(input: NewUser!): User!
-  deleteUser(id:ID!): Boolean!
-
-  createProduct(input: NewProduct!): Product!
-  createTable(input: NewTable!): Table!
-  # Customer side
-  createOrder(input: NewOrder): Order!
-  createFidelity(input: NewFidelity!): Fidelity!
-  createClient(input: NewClient!): Client!
+  # Marketplace
+  createMarketplace(input: NewMarketplace!): Marketplaces!
+  updateMarketplace(input: UpdateMarketplace!,id: String!): Marketplaces!
+  deleteMarketplace(id: String!): Marketplaces!
+  # Product
+  createProduct(input: NewProduct!): Products!
+  updateProduct(input: UpdateProduct!,id: String!): Products!
+  deleteProduct(id: String!): Products!
+  # Table
+  createTable(input: NewTable!): Tables!
+  updateTable(input: UpdateTable!,id: String!): Tables!
+  deleteTable(id: String!): Tables!
+  # Clients
+  createClient(input: NewClient!): Clients!
+  updateClient(input: UpdateClient!,id: String!): Clients!
+  deleteClient(id: String!): Clients!
+  # Order
+  createOrder(input: NewOrder!): Orders!
+  updateOrder(input: UpdateOrder!,id: String!): Orders!
+  deleteOrder(id: String!): Orders!
 }
-
-# QUERY -------------------------------------
+###----------------------------------
 type Query {
-  users: [User]
-  findUser(id:ID!): [User]
-
-  tables: [Table]
-  findTables(id:ID!): [Table]
-
-  products: [Product]
-  findProduct(id:ID!): [Product]
-
-  clients: [Client]
-  findClient(id:ID!): [Client]
-
-  orders:[Order]
-  findOrder(id:ID!): [Order]
-
-  fidelity: [Fidelity]
-  findFidelity(id:ID!): [Fidelity]
+  # Marketplace
+  getMarketplaces: [Marketplaces!]!
+  getOneMarketplace(id: String!): Marketplaces!
+  # Product
+  getProducts: [Products!]!
+  getOneProduct(id: String!): Products!
+  # Table
+   getTables: [Tables!]!
+  getOneTable(id: String!): Tables!
+  # Clients
+   getClients: [Clients!]!
+  getOneClient(id: String!): Clients!
+  # Order
+   getOrders: [Orders!]!
+  getOneOrder(id: String!): Orders!
 }

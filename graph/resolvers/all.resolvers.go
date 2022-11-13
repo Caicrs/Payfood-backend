@@ -4,247 +4,198 @@ import (
 	"context"
 	"fmt"
 
+	"time"
+
 	"github.com/Caicrs/Payfood-backend/common"
 	"github.com/Caicrs/Payfood-backend/graph/generated"
-	"github.com/Caicrs/Payfood-backend/graph/model"
+	model "github.com/Caicrs/Payfood-backend/graph/model"
+	uuid "github.com/satori/go.uuid"
 )
 
-func (r *mutationResolver) CreateOrder(ctx context.Context, input *model.NewOrder) (*model.Order, error) {
-
-	// context
+// CreateMarketplace is the resolver for the createMarketplace field.
+func (r *mutationResolver) CreateMarketplace(ctx context.Context, input model.NewMarketplace) (*model.Marketplaces, error) {
 	context := common.GetContext(ctx)
-	order := model.Order{
-		MarketplaceUserID: input.MarketplaceUserID,
-		ClientID:          input.ClientID,
-		TableID:           input.TableID,
-		TotalPrice:        input.TotalPrice,
+	marketplace := model.Marketplaces{
+		ID:          fmt.Sprintln(uuid.NewV4()),
+		Name:        input.Name,
+		Description: input.Description,
+		Cnpj:        input.Cnpj,
+		Email:       input.Email,
+		Password:    input.Password,
+		Version:     input.Version,
 	}
-
-	err := context.Database.Create(&order).Error
+	err := context.Database.Create(&marketplace).Error
 	if err != nil {
 		return nil, err
 	}
-	return &order, nil
+	return &marketplace, nil
 }
 
-func (r *mutationResolver) CreateClient(ctx context.Context, input model.NewClient) (*model.Client, error) {
-	context := common.GetContext(ctx)
-	Clients := &model.Client{
-		Name:     &input.Name,
-		Email:    &input.Email,
-		Password: &input.Password,
-		Cpf:      &input.Cpf,
-		Phone:    &input.Phone,
-	}
-	err := context.Database.Create(&Clients).Error
-	if err != nil {
-		return nil, err
-	}
-	return Clients, nil
+// GetMarketplaces is the resolver for the getMarketplaces field.
+func (r *queryResolver) GetMarketplaces(ctx context.Context) ([]*model.Marketplaces, error) {
+	panic(fmt.Errorf("not implemented: GetMarketplaces - getMarketplaces"))
 }
 
-func (r *mutationResolver) CreateFidelity(ctx context.Context, input model.NewFidelity) (*model.Fidelity, error) {
-	context := common.GetContext(ctx)
-	Fidelity := &model.Fidelity{
-		ClientID: &input.ClientID,
-		Score:    &input.Score,
-	}
-	err := context.Database.Create(&Fidelity).Error
-	if err != nil {
-		return nil, err
-	}
-	return Fidelity, nil
+// GetOneMarketplace is the resolver for the getOneMarketplace field.
+func (r *queryResolver) GetOneMarketplace(ctx context.Context, id string) (*model.Marketplaces, error) {
+	panic(fmt.Errorf("not implemented: GetOneMarketplace - getOneMarketplace"))
 }
 
-func (r *mutationResolver) CreateProduct(ctx context.Context, input model.NewProduct) (*model.Product, error) {
+// UpdateMarketplace is the resolver for the updateMarketplace field.
+func (r *mutationResolver) UpdateMarketplace(ctx context.Context, input model.UpdateMarketplace, id string) (*model.Marketplaces, error) {
+	panic(fmt.Errorf("not implemented: UpdateMarketplace - updateMarketplace"))
+}
+
+// DeleteMarketplace is the resolver for the deleteMarketplace field.
+func (r *mutationResolver) DeleteMarketplace(ctx context.Context, id string) (*model.Marketplaces, error) {
+	panic(fmt.Errorf("not implemented: DeleteMarketplace - deleteMarketplace"))
+}
+
+// CreateProduct is the resolver for the createProduct field.
+func (r *mutationResolver) CreateProduct(ctx context.Context, input model.NewProduct) (*model.Products, error) {
 	context := common.GetContext(ctx)
-	Products := &model.Product{
-		MarketplaceID: input.MarketplaceID,
+	product := model.Products{
+		ID:            fmt.Sprintln(uuid.NewV4()),
 		Name:          input.Name,
 		Description:   input.Description,
 		Price:         input.Price,
+		Images:        input.Images,
+		MarketplaceID: input.MarketplaceID,
 	}
-	err := context.Database.Create(&Products).Error
+	err := context.Database.Create(&product).Error
 	if err != nil {
 		return nil, err
 	}
-	return Products, nil
+	return &product, nil
 }
 
-func (r *mutationResolver) CreateTable(ctx context.Context, input model.NewTable) (*model.Table, error) {
+// UpdateProduct is the resolver for the updateProduct field.
+func (r *mutationResolver) UpdateProduct(ctx context.Context, input model.UpdateProduct, id string) (*model.Products, error) {
+	panic(fmt.Errorf("not implemented: UpdateProduct - updateProduct"))
+}
+
+// DeleteProduct is the resolver for the deleteProduct field.
+func (r *mutationResolver) DeleteProduct(ctx context.Context, id string) (*model.Products, error) {
+	panic(fmt.Errorf("not implemented: DeleteProduct - deleteProduct"))
+}
+
+// GetProducts is the resolver for the getProducts field.
+func (r *queryResolver) GetProducts(ctx context.Context) ([]*model.Products, error) {
+	panic(fmt.Errorf("not implemented: GetProducts - getProducts"))
+}
+
+// GetOneProduct is the resolver for the getOneProduct field.
+func (r *queryResolver) GetOneProduct(ctx context.Context, id string) (*model.Products, error) {
+	panic(fmt.Errorf("not implemented: GetOneProduct - getOneProduct"))
+}
+
+// GetClients is the resolver for the getClients field.
+func (r *queryResolver) GetClients(ctx context.Context) ([]*model.Clients, error) {
+	panic(fmt.Errorf("not implemented: GetOneClient - getOneClient"))
+}
+
+// GetOneClient is the resolver for the getOneClient field.
+func (r *queryResolver) GetOneClient(ctx context.Context, id string) (*model.Clients, error) {
+	panic(fmt.Errorf("not implemented: GetOneClient - getOneClient"))
+}
+
+// CreateClient is the resolver for the createClient field.
+func (r *mutationResolver) CreateClient(ctx context.Context, input model.NewClient) (*model.Clients, error) {
 	context := common.GetContext(ctx)
-	Tables := &model.Table{
-		Number: &input.Number,
-		Qrcode: &input.Qrcode,
+	clients := model.Clients{
+		ID:       fmt.Sprintln(uuid.NewV4()),
+		Name:     input.Name,
+		Phone:    input.Phone,
+		Cpf:      input.Cpf,
+		Email:    input.Email,
+		Password: input.Password,
+		MiniPass: input.MiniPass,
 	}
-	err := context.Database.Create(&Tables).Error
+	err := context.Database.Create(&clients).Error
 	if err != nil {
 		return nil, err
 	}
-	return Tables, nil
+	return &clients, nil
 }
 
-func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
+// UpdateClient is the resolver for the updateClient field.
+func (r *mutationResolver) UpdateClient(ctx context.Context, input model.UpdateClient, id string) (*model.Clients, error) {
+	panic(fmt.Errorf("not implemented: UpdateClient - updateClient"))
+}
+
+// DeleteClient is the resolver for the deleteClient field.
+func (r *mutationResolver) DeleteClient(ctx context.Context, id string) (*model.Clients, error) {
+	panic(fmt.Errorf("not implemented: DeleteClient - deleteClient"))
+}
+
+// GetOrders is the resolver for the getOrders field.
+func (r *queryResolver) GetOrders(ctx context.Context) ([]*model.Orders, error) {
+	panic(fmt.Errorf("not implemented: GetOrders - getOrders"))
+}
+
+// GetOneOrder is the resolver for the getOneOrder field.
+func (r *queryResolver) GetOneOrder(ctx context.Context, id string) (*model.Orders, error) {
+	panic(fmt.Errorf("not implemented: GetOneOrder - getOneOrder"))
+}
+
+// CreateOrder is the resolver for the createOrder field.
+func (r *mutationResolver) CreateOrder(ctx context.Context, input model.NewOrder) (*model.Orders, error) {
 	context := common.GetContext(ctx)
-	Users := &model.User{
-		Name:        &input.Name,
-		Description: &input.Description,
-		Cnpj:        &input.Cnpj,
-		Email:       &input.Email,
-		Password:    &input.Password,
-		Image:       &input.Image,
-		Superadmin:  &input.Superadmin,
-		Admin:       &input.Admin,
+	clients := model.Orders{
+		ID:            fmt.Sprintln(uuid.NewV4()),
+		ClientID:      input.ClientID,
+		MarketplaceID: input.MarketplaceID,
+		ProductsID:    input.ProductsID,
+		TableID:       input.TableID,
+		TotalPrice:    input.TotalPrice,
+		CreatedAt:     fmt.Sprintln(time.Now()),
 	}
-	err := context.Database.Create(&Users).Error
+	err := context.Database.Create(&clients).Error
 	if err != nil {
 		return nil, err
 	}
-	return Users, nil
+	return &clients, nil
 }
 
-func (r *mutationResolver) DeleteOrder(ctx context.Context, OrderID string) (*model.Order, error) {
-	context := common.GetContext(ctx)
-	var Order *model.Order
-	err := context.Database.Where("id = ?", OrderID).Delete(&Order).Error
-	if err != nil {
-		return nil, err
-	}
-	return Order, nil
+// UpdateOrder is the resolver for the updateOrder field.
+func (r *mutationResolver) UpdateOrder(ctx context.Context, input model.UpdateOrder, id string) (*model.Orders, error) {
+	panic(fmt.Errorf("not implemented: UpdateOrder - updateOrder"))
 }
 
-func (r *queryResolver) Clients(ctx context.Context) ([]*model.Client, error) {
-	context := common.GetContext(ctx)
-	var Clients []*model.Client
-	err := context.Database.Find(&Clients).Error
-	if err != nil {
-		return nil, err
-	}
-	return Clients, nil
+// DeleteOrder is the resolver for the deleteOrder field.
+func (r *mutationResolver) DeleteOrder(ctx context.Context, id string) (*model.Orders, error) {
+	panic(fmt.Errorf("not implemented: DeleteOrder - deleteOrder"))
 }
 
-func (r *queryResolver) Fidelity(ctx context.Context) ([]*model.Fidelity, error) {
-	context := common.GetContext(ctx)
-	var Fidelitys []*model.Fidelity
-	err := context.Database.Find(&Fidelitys).Error
-	if err != nil {
-		return nil, err
-	}
-	return Fidelitys, nil
+// CreateTable is the resolver for the createTable field.
+func (r *mutationResolver) CreateTable(ctx context.Context, input model.NewTable) (*model.Tables, error) {
+	panic(fmt.Errorf("not implemented: CreateTable - createTable"))
 }
 
-func (r *queryResolver) Orders(ctx context.Context) ([]*model.Order, error) {
-	context := common.GetContext(ctx)
-	var Orders []*model.Order
-	err := context.Database.Find(&Orders).Error
-	if err != nil {
-		return nil, err
-	}
-	return Orders, nil
+// UpdateTable is the resolver for the updateTable field.
+func (r *mutationResolver) UpdateTable(ctx context.Context, input model.UpdateTable, id string) (*model.Tables, error) {
+	panic(fmt.Errorf("not implemented: UpdateTable - updateTable"))
 }
 
-func (r *queryResolver) Products(ctx context.Context) ([]*model.Product, error) {
-	context := common.GetContext(ctx)
-	var Products []*model.Product
-	err := context.Database.Find(&Products).Error
-	if err != nil {
-		return nil, err
-	}
-	return Products, nil
+// DeleteTable is the resolver for the deleteTable field.
+func (r *mutationResolver) DeleteTable(ctx context.Context, id string) (*model.Tables, error) {
+	panic(fmt.Errorf("not implemented: DeleteTable - deleteTable"))
 }
 
-func (r *queryResolver) Tables(ctx context.Context) ([]*model.Table, error) {
-	context := common.GetContext(ctx)
-	var Tables []*model.Table
-	err := context.Database.Find(&Tables).Error
-	if err != nil {
-		return nil, err
-	}
-	return Tables, nil
+// GetTables is the resolver for the getTables field.
+func (r *queryResolver) GetTables(ctx context.Context) ([]*model.Tables, error) {
+	panic(fmt.Errorf("not implemented: GetTables - getTables"))
 }
 
-func (r *queryResolver) Users(ctx context.Context) ([]*model.User, error) {
-	context := common.GetContext(ctx)
-	var Users []*model.User
-	err := context.Database.Find(&Users).Error
-	if err != nil {
-		return nil, err
-	}
-	return Users, nil
+// GetOneTable is the resolver for the getOneTable field.
+func (r *queryResolver) GetOneTable(ctx context.Context, id string) (*model.Tables, error) {
+	panic(fmt.Errorf("not implemented: GetOneTable - getOneTable"))
 }
 
-func (r *queryResolver) FindUser(ctx context.Context, UserID string) ([]*model.User, error) {
-	context := common.GetContext(ctx)
-	var User []*model.User
-	err := context.Database.Where("id = ?", UserID).Find(&User).Error
-	if err != nil {
-		return nil, err
-	}
-	return User, nil
-}
-
-func (r *queryResolver) FindTables(ctx context.Context, TableID string) ([]*model.Table, error) {
-	context := common.GetContext(ctx)
-	var Table []*model.Table
-	err := context.Database.Where("id = ?", TableID).Find(&Table).Error
-	if err != nil {
-		return nil, err
-	}
-	return Table, nil
-}
-
-func (r *queryResolver) FindProduct(ctx context.Context, ProductID string) ([]*model.Product, error) {
-	context := common.GetContext(ctx)
-	var Product []*model.Product
-	err := context.Database.Where("id = ?", ProductID).Find(&Product).Error
-	if err != nil {
-		return nil, err
-	}
-	return Product, nil
-}
-
-func (r *queryResolver) GetOrder(ctx context.Context, OrderID string) (*model.Order, error) {
-	context := common.GetContext(ctx)
-	var Order *model.Order
-	err := context.Database.Where("id = ?", OrderID).Find(&Order).Error
-	if err != nil {
-		return nil, err
-	}
-	return Order, nil
-}
-
-func (r *queryResolver) FindFidelity(ctx context.Context, FidelityID string) ([]*model.Fidelity, error) {
-	context := common.GetContext(ctx)
-	var Fidelity []*model.Fidelity
-	err := context.Database.Where("id = ?", FidelityID).Find(&Fidelity).Error
-	if err != nil {
-		return nil, err
-	}
-	return Fidelity, nil
-}
-
-func (r *queryResolver) FindClient(ctx context.Context, ClientID string) ([]*model.Client, error) {
-	context := common.GetContext(ctx)
-	var Client []*model.Client
-	err := context.Database.Where("id = ?", ClientID).Find(&Client).Error
-	if err != nil {
-		return nil, err
-	}
-	return Client, nil
-}
-
-// FindOrder is the resolver for the findOrder field.
-func (r *queryResolver) FindOrder(ctx context.Context, id string) ([]*model.Order, error) {
-	panic(fmt.Errorf("not implemented: FindOrder - findOrder"))
-}
-
-// DeleteUser is the resolver for the deleteUser field.
-func (r *mutationResolver) DeleteUser(ctx context.Context, id string) (bool, error) {
-	panic(fmt.Errorf("not implemented: DeleteUser - deleteUser"))
-}
-
+// Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
+// Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
