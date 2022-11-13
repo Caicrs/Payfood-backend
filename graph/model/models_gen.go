@@ -2,20 +2,147 @@
 
 package model
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+import "gorm.io/gorm"
+
+type Clients struct {
+	gorm.Model
+	ID         string    `gorm:"primary_key" json:"id"`
+	Name       string    `json:"name"`
+	Phone      string    `json:"phone"`
+	Cpf        string    `json:"cpf"`
+	Email      string    `json:"email"`
+	Password   string    `json:"password"`
+	FidelityID *string   `json:"fidelity_id"`
+	Orders     []*Orders `gorm:"foreignKey:client_id" json:"orders"`
+	MiniPass int    `json:"miniPass"`
 }
 
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
+type Marketplaces struct {
+	gorm.Model
+	ID          string      `gorm:"primary_key" json:"id"`
+	Name        string      `json:"name"`
+	Description string      `json:"description"`
+	Cnpj        string      `json:"cnpj"`
+	Email       string      `json:"email"`
+	Password    string      `json:"password"`
+	Version     string      `json:"version"`
+	Products    []*Products `gorm:"foreignKey:marketplace_id" json:"products"`
+	Tables      []*Tables   `gorm:"foreignKey:marketplace_id" json:"tables"`
+	Orders      []*Orders   `gorm:"foreignKey:marketplace_id" json:"orders"`
 }
 
-type User struct {
-	ID    string  `json:"id"`
-	Email *string `json:"email"`
-	Name  string  `json:"name"`
+type NewClient struct {
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Phone    string `json:"phone"`
+	Cpf      string `json:"cpf"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	MiniPass int    `json:"miniPass"`
+}
+
+type NewMarketplace struct {
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Cnpj        string `json:"cnpj"`
+	Email       string `json:"email"`
+	Password    string `json:"password"`
+	Version     string `json:"version"`
+}
+
+type NewOrder struct {
+	ID            string   `json:"id"`
+	ClientID      string   `json:"clientID"`
+	MarketplaceID string   `json:"marketplaceID"`
+	TableID       string   `json:"tableID"`
+	ProductsID    []string `json:"productsID"`
+	TotalPrice    float64  `json:"totalPrice"`
+	Paid          bool     `json:"paid"`
+	CreatedAt     string   `json:"created_at"`
+}
+
+type NewProduct struct {
+	ID            string   `json:"id"`
+	Name          string   `json:"name"`
+	Description   string   `json:"description"`
+	Price         float64  `json:"price"`
+	Images        []string `json:"images"`
+	MarketplaceID string   `json:"marketplaceID"`
+}
+
+type NewTable struct {
+	ID            string `json:"id"`
+	Number        int    `json:"number"`
+	Qrcode        string `json:"qrcode"`
+	MarketplaceID string `json:"marketplaceID"`
+}
+
+type Orders struct {
+	gorm.Model
+	ID            string   `gorm:"primary_key" json:"id"`
+	ClientID      string   `json:"client_id"`
+	MarketplaceID string   `json:"marketplace_id"`
+	TableID       string   `json:"table_id"`
+	ProductsID    []string `gorm:"type:text[];foreignKey:id" json:"products_id"`
+	TotalPrice    float64  `json:"total_price"`
+	Paid          bool     `json:"paid"`
+	CreatedAt     string  `json:"createdAt"`
+}
+
+type Products struct {
+	gorm.Model
+	ID            string   `gorm:"primary_key" json:"id"`
+	Name          string   `json:"name"`
+	Description   string   `json:"description"`
+	Price         float64  `json:"price"`
+	Images        []string `gorm:"type:text[]" json:"images"`
+	MarketplaceID string   `json:"marketplace_id"`
+}
+
+type Tables struct {
+	gorm.Model
+	ID            string `gorm:"primary_key" json:"id"`
+	Number        int    `json:"number"`
+	Qrcode        string `json:"qrcode"`
+	MarketplaceID string `json:"marketplace_id"`
+}
+
+type UpdateClient struct {
+	Name     string `json:"name"`
+	Phone    string `json:"phone"`
+	Cpf      string `json:"cpf"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	MiniPass int    `json:"miniPass"`
+}
+
+type UpdateMarketplace struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Cnpj        string `json:"cnpj"`
+	Email       string `json:"email"`
+	Password    string `json:"password"`
+	Version     string `json:"version"`
+}
+
+type UpdateOrder struct {
+	ClientID      string   `json:"clientID"`
+	MarketplaceID string   `json:"marketplaceID"`
+	TableID       string   `json:"tableID"`
+	ProductsID    []string `json:"productsID"`
+	TotalPrice    float64  `json:"totalPrice"`
+	Paid          bool     `json:"paid"`
+}
+
+type UpdateProduct struct {
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Price       float64  `json:"price"`
+	Images      []string `json:"images"`
+}
+
+type UpdateTable struct {
+	Number int    `json:"number"`
+	Qrcode string `json:"qrcode"`
 }
